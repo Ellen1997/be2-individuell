@@ -3,6 +3,7 @@ import { setCookie } from "hono/cookie"
 import { createServerClient, parseCookieHeader } from "@supabase/ssr"
 import type { SupabaseClient, User } from "@supabase/supabase-js"
 import { supabaseUrl, supabaseAnonKey } from "../lib/supabase.js"
+import { HTTPException } from "hono/http-exception"
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -42,6 +43,20 @@ export async function withSupabase(c: Context, next: Next) {
     const { data: { user }, error } = await sb.auth.getUser()
     console.log
     c.set("user", error ? null : user)
+  }
+  return next()
+}
+
+export async function optionalAuth(c: Context, next: Next) {
+  return withSupabase(c, next)
+}
+
+export async function requireAuth(c: Context, next: Next) {
+  await withSupabase(c, async () => {})
+  const user = c.get("user")
+  console.log("Authenticated user:", user)
+  if (!user) {
+    throw new HTTPException(401, { message: "Unauthorized" })
   }
   return next()
 }
