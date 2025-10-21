@@ -4,6 +4,7 @@ import { serve } from '@hono/node-server'
 import { withSupabase } from './middleware/auth.js';
 
 import usersApp from './routes/users.js'
+import propertiesApp from './routes/properties.js';
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.get('/', (c) => {
 })
 
 app.route('/users', usersApp )
+app.route('/properties', propertiesApp)
 
 
 

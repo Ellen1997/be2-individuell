@@ -5,6 +5,7 @@ interface NewUser {
     email: string;
     phone_number: string;
     isadmin?: boolean;
+    isPropertyOwner?: boolean;
 }
 
 interface User extends NewUser {

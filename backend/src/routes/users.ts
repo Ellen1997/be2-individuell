@@ -24,7 +24,8 @@ usersApp.post("/", userValidator, async (c) => {
             name: String(payload.name),
             email: String(payload.email),
             phone_number: String(payload.phone_number),
-            isadmin: Boolean(payload.isadmin)
+            isadmin: payload.isadmin ?? false,
+            isPropertyOwner: payload.isPropertyOwner ?? false,
 
         }
 
