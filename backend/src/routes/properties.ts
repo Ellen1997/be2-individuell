@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { propertyValidator } from "../validators/propertyValidator.js";
+import type { Property, NewProperty, PropertyListQuery } from "../../../types/property.js"
 import { requireAuth } from "../middleware/auth.js";
 import { getCookie } from "hono/cookie";
 

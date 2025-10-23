@@ -1,6 +1,6 @@
 
 
-interface NewProperty {
+export interface NewProperty {
     
     property_name: string;
     description: string;
@@ -10,20 +10,14 @@ interface NewProperty {
     owner_id: string;
 }
 
-interface Property extends NewProperty {
+export interface Property extends NewProperty {
     property_id: string;
     created_at: string;
 }
 
-type PropertyListQuery = {
+export type PropertyListQuery = {
     limit?: number;
     offset?: number;
 }
 
 
-type PaginatedListResponse<T> = {
-    data: T[];
-    count: number;
-    limit: number;
-    offset: number;
-};

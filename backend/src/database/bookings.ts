@@ -1,4 +1,6 @@
 import type { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+import type { PaginatedListResponse } from "../../../types/general.js"
+import type { Booking, NewBooking, BookingListQuery } from "../../../types/bookings.js"
 
 export async function getBookings(query: BookingListQuery, sb: SupabaseClient): 
 Promise<PaginatedListResponse<Booking>> {

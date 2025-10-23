@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import bookingValidator from "../validators/bookingsValidator.js"
 import { requireAdmin } from "../middleware/auth.js";
+import type { PaginatedListResponse } from "../../../types/general.js"
+import type { Booking, NewBooking } from "../../../types/bookings.js"
 
 import * as db from "../database/bookings.js";
 

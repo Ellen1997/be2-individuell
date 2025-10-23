@@ -1,4 +1,6 @@
 import type { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+import type { Property, NewProperty, PropertyListQuery } from "../../../types/property.js"
+import type { PaginatedListResponse } from "../../../types/general.js"
 
 export async function getProperties(query: PropertyListQuery, sb: SupabaseClient):
 Promise<PaginatedListResponse<Property>>{

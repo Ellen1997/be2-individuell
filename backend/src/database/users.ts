@@ -1,4 +1,6 @@
 import type { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+import type { User, NewUser, UserListQuery } from "../../../types/users.js";
+import type { PaginatedListResponse } from "../../../types/general.js"
 
 export async function getUsers(query: UserListQuery, sb: SupabaseClient):
 Promise<PaginatedListResponse<User>>{

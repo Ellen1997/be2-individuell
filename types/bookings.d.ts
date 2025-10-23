@@ -1,4 +1,4 @@
- interface Booking {
+ export interface Booking {
   booking_id: string;
   property_id: string;
   profileuser_id: string;
@@ -18,22 +18,16 @@
   };
 }
 
- interface NewBooking {
+ export interface NewBooking {
   property_id: string;
   profileuser_id: string;
   start_date: string;
   end_date: string;
 }
 
-type BookingListQuery = {
+export type BookingListQuery = {
     limit?: number;
     offset?: number;
 }
 
 
-type PaginatedListResponse<T> = {
-    data: T[];
-    count: number;
-    limit: number;
-    offset: number;
-};
