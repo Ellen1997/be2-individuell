@@ -1,18 +1,20 @@
 import type { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
-import { property } from "zod";
 
 export async function getProperties(query: PropertyListQuery, sb: SupabaseClient):
 Promise<PaginatedListResponse<Property>>{
+
+  const startIndex = query.offset || 0;
+  const endIndex = startIndex + (query.limit || 10) - 1;
 
     const _query = sb
     .from("properties")
     .select("*", {count: "exact"})
 
-    const {data, count, error} = await _query;
+    const properties: PostgrestSingleResponse<Property[]> = await _query;
 
     return {
-        data: (data ?? []) as [],
-        count: count ?? 0,
+        data: properties.data || [],
+        count: properties.count ?? 0,
         limit: query.limit ?? 20,
         offset: query.offset ?? 0,
 

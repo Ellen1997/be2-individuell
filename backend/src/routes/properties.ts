@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import { propertyValidator } from "../validators/propertyValidator.js";
+import { requireAuth } from "../middleware/auth.js";
+import { getCookie } from "hono/cookie";
 
 import * as db from "../database/property.js"
 
@@ -12,9 +14,10 @@ propertiesApp.get("/", async (c) => {
     return c.json(response, 200)
 })
 
-propertiesApp.post("/", propertyValidator, async (c) => {
+propertiesApp.post("/", requireAuth, propertyValidator, async (c) => {
     try{
         const sb = c.get("supabase");
+        console.log(getCookie(c, "sb-uwvoyuxbzpevslwjkfva-auth-token"))
         
         const payload = c.req.valid("json");
 
