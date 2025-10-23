@@ -23,6 +23,22 @@ Promise<PaginatedListResponse<Property>>{
     };
 }
 
+export async function getProperty(sb: SupabaseClient,
+    id: string
+): Promise<Partial<Property>> {
+
+    const _query = sb
+    .from("properties")
+    .select("*", {count: "exact"})
+    .eq("property_id", id)
+    .single();
+
+    const properties: PostgrestSingleResponse<Property> = await _query;
+
+    return properties.data ?? {}
+
+}
+
 export async function createProperty(sb: SupabaseClient, property: NewProperty):
 Promise<Property> {
     const query = sb.from("properties").insert(property).select().single();
