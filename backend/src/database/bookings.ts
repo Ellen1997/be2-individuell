@@ -116,7 +116,8 @@ Promise<Booking[]> {
 
 
 
-export async function createBookings(sb: SupabaseClient, booking: NewBooking):
+export async function createBookings(sb: SupabaseClient, 
+  booking: Omit<NewBooking, "profileuser_id"> & { profileuser_id: string }):
 Promise<Booking> {
 
     const { data: existingBookings, error: overlapError } = await sb

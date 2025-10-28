@@ -31,10 +31,16 @@ bookingsApp.get("/:id", async (c) => {
 
 bookingsApp.post("/", bookingValidator, async (c) => {
   const sb = c.get("supabase");
-  const payload: NewBooking = c.req.valid("json");
+  const user = c.get("user");
+
+  if (!user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const payload: Omit<NewBooking, "profileuser_id"> = c.req.valid("json");
 
   try {
-    const booking: Booking = await db.createBookings(sb, payload);
+    const booking: Booking = await db.createBookings(sb, {...payload, profileuser_id: user.id });
     return c.json(booking, 201);
   } catch (err) {
     return c.json({ error: (err as Error).message }, 400);

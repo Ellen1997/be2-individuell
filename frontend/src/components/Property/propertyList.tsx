@@ -21,10 +21,16 @@ export default function PropertyList({properties}: PropertyListProps){
                               <p className="text-gray-600">{property.description}</p>
                         </div>
                     </div>
-             <div>
+             <div className="mt-4 flex gap-4">
                 <Link href={`/properties/${property.property_id}`}>
                 Detaljsida Property
                 </Link>
+                <Link
+              href={`/bookings/new?propertyId=${property.property_id}`}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            >
+              Boka
+            </Link>
              </div>
                 </div>
             ) 
