@@ -6,6 +6,15 @@ export interface NewUser {
     phone_number: string;
     isadmin?: boolean;
     isPropertyOwner?: boolean;
+    bookings?: {
+        booking_id?: string,
+        start_date?: string,
+        end_date?: string,
+        total_price?: number,
+        properties?: {
+            property_name?: string;
+        } 
+    }[];
 }
 
 export interface User extends NewUser {

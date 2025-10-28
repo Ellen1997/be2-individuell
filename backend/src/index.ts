@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server'
 import { withSupabase } from './middleware/auth.js';
+import { cors } from 'hono/cors';
 
 import usersApp from './routes/users.js'
 import propertiesApp from './routes/properties.js'
@@ -19,7 +20,12 @@ const app = new Hono ({
 //Nedan är ba för "server hälsa" utskriften
 const serverStartTime = Date.now();
 
-app.use('*', withSupabase);
+app.use('*', withSupabase, cors({
+  origin: "http://localhost:3001",
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 
 
 app.get('/', (c) => {

@@ -10,6 +10,10 @@
     property_name: string;
     location: string;
     pricePerNight: number;
+    owner_id: string;
+    profileusers?: {
+      name:string; 
+    }
   };
   profileusers?: {
     name: string;

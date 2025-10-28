@@ -2,6 +2,8 @@ import { Hono } from "hono"
 import { HTTPException } from "hono/http-exception"
 import * as db from "../database/users.js";
 import { registerValidator } from "../validators/registerValidator.js";
+import { setCookie } from "hono/cookie";
+import { set } from "zod";
 
 export const authApp = new Hono()
 
@@ -36,6 +38,21 @@ authApp.post("/login", async (c) => {
     });
   }
 
+  setCookie(c, "access_token", data.session?.access_token ?? "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+    maxAge: 60 * 60 * 24 * 7, 
+    path: "/", });
+
+  setCookie(c, "refresh_token", data.session?.refresh_token ?? "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+    maxAge: 60 * 60 * 24 * 30,
+    path: "/",
+  });
+
   return c.json({
     message: "Login successful",
     user: {
@@ -46,7 +63,6 @@ authApp.post("/login", async (c) => {
       isadmin: profileResponse.data.isadmin,
       ispropertyowner: profileResponse.data.ispropertyowner,
     },
-    session: data.session,
   }, 200);
 })
 
@@ -79,6 +95,13 @@ if (insertResponse.error) {
 }
 
 return c.json({ message: "User registered successfully", user: data.user }, 201);
+});
+
+
+authApp.post("/logout", (c) => {
+  setCookie(c, "access_token", "", { maxAge: 0, path: "/" });
+  setCookie(c, "refresh_token", "", { maxAge: 0, path: "/" });
+  return c.json({ message: "Logged out" });
 });
 
 export default authApp;

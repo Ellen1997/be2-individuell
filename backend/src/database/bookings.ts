@@ -11,7 +11,20 @@ Promise<PaginatedListResponse<Booking>> {
 
     const _query = sb
     .from("bookings")
-    .select("*", {count: "exact"})
+    .select(`
+      *,
+      properties (
+        property_name,
+        location,
+        profileusers (
+        name)
+      ),
+      profileusers (
+        name,
+        email,
+        phone_number
+      )
+    `)
     .range(startIndex, endIndex)
 
     const bookings: PostgrestSingleResponse<Booking[]> = await _query;
@@ -22,6 +35,35 @@ Promise<PaginatedListResponse<Booking>> {
         limit: query.limit ?? 20,
         offset: query.offset ?? 0,
     };
+}
+
+export async function getBooking(sb: SupabaseClient, 
+    id: string
+): Promise<Partial<Booking>> {
+
+    const _query = sb
+    .from("bookings")
+    .select(`
+      *,
+      properties (
+        property_name,
+        location,
+        profileusers (
+        name)
+      ),
+      profileusers (
+        name,
+        email,
+        phone_number
+      )
+    `)
+    .eq("booking_id", id)
+    .single();
+
+    const bookings: PostgrestSingleResponse<Booking> = await _query
+
+    return bookings.data ?? {}
+
 }
 
 export async function getBookingsByProperty(sb: SupabaseClient, propertyId: string): 

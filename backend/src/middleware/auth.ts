@@ -25,7 +25,7 @@ function createSupabaseForRequest(c: Context) {
           setCookie(c, name, value, {
             ...options,
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
           })

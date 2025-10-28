@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -7,6 +7,16 @@ export default function Home() {
         <h1>
           FRONTEND OSV individuella uppg. 
         </h1>
+
+        <Link href="/properties" className="text-blue-600 underline">
+          Gå till Propertysida
+        </Link>
+        <Link href="/profileusers" className="text-blue-600 underline">
+          Gå till Usersida
+        </Link>
+        <Link href="/bookings" className="text-blue-600 underline">
+          Gå till Bookingsida
+        </Link>
       
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

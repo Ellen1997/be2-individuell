@@ -7,7 +7,16 @@ Promise<PaginatedListResponse<User>>{
 
     const _query = sb
     .from("profileusers")
-    .select("*", {count: "exact"})
+    .select(`
+      *,
+      bookings (
+          booking_id,
+            start_date,
+            end_date,
+            total_price 
+            , properties (
+                property_name )
+                )`, {count: "exact"})
 
     const users: PostgrestSingleResponse<User[]> = await _query;
 
@@ -20,10 +29,34 @@ Promise<PaginatedListResponse<User>>{
 
 }
 
+export async function getUser(sb: SupabaseClient,
+    id: string ): Promise<Partial<User>> {
+    const _query = sb
+    .from("profileusers")
+    .select(`
+      *,
+      bookings (
+          booking_id,
+            start_date,
+            end_date,
+            total_price 
+            , properties (
+                property_name )
+                )`)
+    .eq("profileuser_id", id)
+    .single();
+
+    const users: PostgrestSingleResponse<User> = await _query;
+    return users.data ?? {};
+
+    }
+
+
 
 //Nedan ska inte användas egentligen i.o.m auth/register, denna kan
 //vara kvar ifall admin vill skapa användare eftersom database å route 
 //redan uppsatt, men ska ej anvädnas (DEN FÅR INGEN USER-GREJ I SUPABASE)
+
 export async function createUser (sb: SupabaseClient , user: NewUser): 
 Promise<User> {
     const query = sb.from("profileusers").insert(user).select().single();

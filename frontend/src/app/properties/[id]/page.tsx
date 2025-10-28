@@ -1,5 +1,6 @@
 import type { Property } from "../../../../../types/property.js"
 import SingleProperty from "@/components/Property/SingleProperty";
+import Link from "next/link.js";
 
 
 type Params = {
@@ -15,6 +16,9 @@ export default async function PropertyPage({params}: Params) {
 
    return(
      <div className="p-16">
+      <Link href="/" className="text-blue-600 underline">
+              Tillbaka till startsidan
+            </Link>
       <h1 className="text-2xl font-bold mb-4">PROPERTY DETALJ</h1>
       <SingleProperty property={property} />
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import NavLinks from "@/components/navlinks";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <header className="sticky top-0 z-50 bg-white shadow-sm p-4 flex justify-between items-center">
+          <NavLinks />
+            <h1 className="text-lg font-semibold text-white-800">
+            Individuella uppgift
+          </h1>
+        </header>
         {children}
       </body>
     </html>

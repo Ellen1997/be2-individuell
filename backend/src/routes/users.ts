@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { userValidator } from "../validators/usersValidator.js";
+import type { User, NewUser, UserListQuery } from "../../../types/users.js";
 
 import * as db from "../database/users.js";
 
@@ -10,6 +11,13 @@ usersApp.get("/", async (c) => {
 
     const response = await db.getUsers({}, sb);
     return c.json(response, 200)
+})
+
+usersApp.get("/:id", async (c)=> {
+    const sb = c.get("supabase");
+    const { id } = c.req.param();
+    const user = await db.getUser(sb, id)
+    return c.json(user, 200);
 })
 
 

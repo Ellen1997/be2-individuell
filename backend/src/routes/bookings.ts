@@ -8,7 +8,7 @@ import * as db from "../database/bookings.js";
 
 const bookingsApp = new Hono();
 
-bookingsApp.get("/", requireAdmin, async (c) => {
+bookingsApp.get("/", async (c) => {
     const sb = c.get("supabase");
     try {
         const bookings: PaginatedListResponse<Booking> = await db.getBookings({}, sb)
@@ -17,6 +17,16 @@ bookingsApp.get("/", requireAdmin, async (c) => {
     } catch (err) {
         return c.json({error: (err as Error).message}, 500)
     }
+})
+
+bookingsApp.get("/:id", async (c) => {
+    const sb = c.get("supabase");
+
+        const { id } = c.req.param();
+        const booking = await db.getBooking(sb, id)
+
+        return c.json(booking, 200);
+
 })
 
 bookingsApp.post("/", bookingValidator, async (c) => {
