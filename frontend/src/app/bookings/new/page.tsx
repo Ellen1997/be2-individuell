@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 export default function NewBookingPage() {
   const router = useRouter();
@@ -12,10 +13,23 @@ export default function NewBookingPage() {
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user, actions } = useUser();
+
 
   if (!propertyId) {
     return <p>Ingen property vald.</p>;
   }
+
+  useEffect(() => {
+    if (user === null) {
+      setError("GIT HÄRIFRÅN");
+      setLoading(false);
+      router.push("/login");
+      return;
+    } if (user === undefined) {
+      return;
+    } 
+  }, [user, actions, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +37,7 @@ export default function NewBookingPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3003/bookings", {
+      const res = await fetch("http://localhost:3003/api/v1/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", 

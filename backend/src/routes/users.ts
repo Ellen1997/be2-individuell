@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { userValidator } from "../validators/usersValidator.js";
 import type { User, NewUser, UserListQuery } from "../../../types/users.js";
+import { requireAuth} from "../middleware/auth.js";
+import type { PaginatedListResponse } from "../../../types/general.js"
 
 import * as db from "../database/users.js";
 
@@ -8,10 +10,14 @@ const usersApp = new Hono();
 
 usersApp.get("/", async (c) => {
     const sb = c.get("supabase");
+    try {
+        const users: PaginatedListResponse<User> = await db.getUsers({}, sb);
+        return c.json(users, 200);
+    } catch (err) {
+        return c.json({ error: (err as Error).message }, 500);
+    }
+});
 
-    const response = await db.getUsers({}, sb);
-    return c.json(response, 200)
-})
 
 usersApp.get("/:id", async (c)=> {
     const sb = c.get("supabase");
@@ -22,6 +28,7 @@ usersApp.get("/:id", async (c)=> {
 
 
 usersApp.post("/", userValidator, async (c) => {
+
     try {
         const sb = c.get("supabase");
 

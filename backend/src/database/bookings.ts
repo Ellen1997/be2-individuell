@@ -6,7 +6,7 @@ export async function getBookings(query: BookingListQuery, sb: SupabaseClient):
 Promise<PaginatedListResponse<Booking>> {
 
   const startIndex = query.offset || 0;
-  const endIndex = startIndex + (query.limit || 10) - 1;
+  const endIndex = startIndex + (query.limit || 100) - 1;
 
 
     const _query = sb
@@ -168,12 +168,6 @@ Promise<Booking> {
     }
     return response.data
 }
-
-//TROR JAG LÖST NEDSTÅENDE!!
-
-//Felen här just nu är att jag I DENNA UPPSÄTTNING måste retunera "return data as Booking[]", och när jag hovrar över 'data' så står det data: any[].
-//Detta eftersom när jag försöker strikt typa <Booking> i min .from() så blir det rödmarkerat hur jag än gör, antingen expected 2 fick 1 eller oändlig loop typ
-//Måste felsöka ordentligt, kolla kursmaterialet + lektion github
 
 
 

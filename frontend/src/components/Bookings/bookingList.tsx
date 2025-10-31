@@ -1,5 +1,4 @@
 import type { Booking } from "../../../../types/bookings.js"
-import type { Property } from "../../../../types/property.js"
 
 import Link from "next/link.js"
 

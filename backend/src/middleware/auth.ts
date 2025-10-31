@@ -40,7 +40,8 @@ export async function withSupabase(c: Context, next: Next) {
     const sb = createSupabaseForRequest(c)
     c.set("supabase", sb)
 
-    const { data: {user}
+    const { 
+      data: {user}
       , error } = await sb.auth.getUser()
     c.set("user", error ? null : user)
   }

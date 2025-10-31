@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import bookingValidator from "../validators/bookingsValidator.js"
-import { requireAdmin } from "../middleware/auth.js";
+import { requireAuth } from "../middleware/auth.js";
 import type { PaginatedListResponse } from "../../../types/general.js"
 import type { Booking, NewBooking } from "../../../types/bookings.js"
 
@@ -29,7 +29,7 @@ bookingsApp.get("/:id", async (c) => {
 
 })
 
-bookingsApp.post("/", bookingValidator, async (c) => {
+bookingsApp.post("/", requireAuth, bookingValidator, async (c) => {
   const sb = c.get("supabase");
   const user = c.get("user");
 
@@ -75,6 +75,3 @@ bookingsApp.get("/user/:id", async (c) => {
 });
 
 export default bookingsApp;
-
-//Denna sköter sig, så gör om alla routes efter denna som nu är strikt typad och korrekt.
-//Databas filerna fortf knas

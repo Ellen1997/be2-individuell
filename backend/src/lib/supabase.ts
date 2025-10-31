@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,9 +10,5 @@ if (!_supabaseUrl || !_supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient(_supabaseUrl, _supabaseAnonKey);
-
-const supabaseUrl = _supabaseUrl as string;
-const supabaseAnonKey = _supabaseAnonKey as string;
-
-export { supabaseUrl, supabaseAnonKey }
+export const supabaseUrl = _supabaseUrl;
+export const supabaseAnonKey = _supabaseAnonKey;

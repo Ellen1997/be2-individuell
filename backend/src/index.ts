@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server'
-import { withSupabase } from './middleware/auth.js';
+import { requireAuth, withSupabase } from './middleware/auth.js';
 import { cors } from 'hono/cors';
 
 import usersApp from './routes/users.js'
@@ -17,29 +17,14 @@ const app = new Hono ({
     strict: false
 });
 
-//Nedan är ba för "server hälsa" utskriften
 const serverStartTime = Date.now();
 
-app.use('*', withSupabase, cors({
-  origin: "http://localhost:3001",
+app.use('*', cors({
+  origin: "http://localhost:3000",
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-}));
-
-
-app.get('/', (c) => {
-    return c.text('Individuella BnB-projket frontend')
-})
-
-app.route('/users', usersApp )
-app.route('/properties', propertiesApp)
-app.route('/auth', authApp)
-app.route('/bookings', bookingsApp)
-
-
-
-
+}), withSupabase);
 
 
 app.get('/health', (c) => {
@@ -56,6 +41,17 @@ app.get('/health', (c) => {
   })
 
 })
+
+app.get('/', (c) => {
+    return c.text('Individuella BnB-projket frontend')
+})
+app.route('/auth', authApp )
+
+app.use('/api/v1/*', requireAuth)
+
+app.route('/api/v1/users', usersApp )
+app.route('/api/v1/properties', propertiesApp)
+app.route('/api/v1/bookings', bookingsApp)
 
 
 serve({

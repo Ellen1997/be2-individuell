@@ -3,7 +3,6 @@ import { HTTPException } from "hono/http-exception"
 import * as db from "../database/users.js";
 import { registerValidator } from "../validators/registerValidator.js";
 import { setCookie } from "hono/cookie";
-import { set } from "zod";
 
 export const authApp = new Hono()
 
@@ -15,6 +14,32 @@ authApp.get("/authusers", async (c) => {
     return c.json(response, 200);
 }
 );
+
+authApp.get("/activeUser", async (c) => {
+  const sb = c.get("supabase");
+  const { data, error } = await sb.auth.getUser();
+
+  if (error || !data?.user) {
+    return c.json({ user: null }, 200); 
+  }
+
+  const profileResponse = await sb
+    .from("profileusers")
+    .select("name, email, phone_number, isadmin, ispropertyowner")
+    .eq("profileuser_id", data.user.id)
+    .single();
+
+  return c.json({
+    user: {
+      id: data.user.id,
+      email: data.user.email,
+      name: profileResponse.data?.name ?? null,
+      phone_number: profileResponse.data?.phone_number ?? null,
+      isadmin: profileResponse.data?.isadmin ?? false,
+      ispropertyowner: profileResponse.data?.ispropertyowner ?? false,
+    },
+  }, 200);
+});
 
 
 authApp.post("/login", async (c) => {
@@ -41,15 +66,15 @@ authApp.post("/login", async (c) => {
   setCookie(c, "access_token", data.session?.access_token ?? "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,        
     sameSite: "Lax",
-    maxAge: 60 * 60 * 24 * 7, 
     path: "/", });
 
   setCookie(c, "refresh_token", data.session?.refresh_token ?? "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, 
     sameSite: "Lax",
-    maxAge: 60 * 60 * 24 * 30,
     path: "/",
   });
 
@@ -97,11 +122,13 @@ if (insertResponse.error) {
 return c.json({ message: "User registered successfully", user: data.user }, 201);
 });
 
-
-authApp.post("/logout", (c) => {
+authApp.post("/logout", async (c) => {
+  const supabase = c.get("supabase");
+  await supabase.auth.signOut();
+  
   setCookie(c, "access_token", "", { maxAge: 0, path: "/" });
   setCookie(c, "refresh_token", "", { maxAge: 0, path: "/" });
-  return c.json({ message: "Logged out" });
+  return c.json({ message: "Logged out" }, 200);
 });
 
 export default authApp;
