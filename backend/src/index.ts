@@ -21,7 +21,7 @@ const serverStartTime = Date.now();
 
 app.use('*', cors({
   origin: "http://localhost:3000",
-  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }), withSupabase);
@@ -47,11 +47,11 @@ app.get('/', (c) => {
 })
 app.route('/auth', authApp )
 
-app.use('/api/v1/*', requireAuth)
+app.use('/api/*', requireAuth)
 
-app.route('/api/v1/users', usersApp )
-app.route('/api/v1/properties', propertiesApp)
-app.route('/api/v1/bookings', bookingsApp)
+app.route('/api/users', usersApp )
+app.route('/api/properties', propertiesApp)
+app.route('/api/bookings', bookingsApp)
 
 
 serve({

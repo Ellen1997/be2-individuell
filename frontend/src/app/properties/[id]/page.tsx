@@ -36,7 +36,7 @@ export default function PropertyPage({ params }: Params) {
 
       try {
        
-        const response = await fetch(`${baseUrl}/api/v1/properties/${id}/`, {
+        const response = await fetch(`${baseUrl}/api/properties/${id}/`, {
           credentials: "include",
         });
 

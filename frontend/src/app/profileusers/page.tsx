@@ -26,7 +26,7 @@ export default function ProfileUsersPage() {
         }
         try {
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-    const url = `${baseUrl}/api/v1/users/`
+    const url = `${baseUrl}/api/users/`
     const response = await fetch(url, {
         credentials: "include"
     })

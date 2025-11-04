@@ -35,7 +35,7 @@ export default function ProfileUserPage({ params }: Params) {
         }
       try {
 
-        const response = await fetch(`${baseUrl}/api/v1/users/${id}`, {
+        const response = await fetch(`${baseUrl}/api/users/${id}`, {
           credentials: "include", 
         });
 

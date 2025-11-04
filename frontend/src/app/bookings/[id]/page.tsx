@@ -36,7 +36,7 @@ export default function BookingPage({ params }: Props) {
 
       try {
 
-        const response = await fetch(`${baseUrl}/api/v1/bookings/${id}`, {
+        const response = await fetch(`${baseUrl}/api/bookings/${id}`, {
           credentials: "include",
         });
 

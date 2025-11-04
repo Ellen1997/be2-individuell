@@ -28,7 +28,7 @@ export default function BookingPage() {
 
       try {
         const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-        const res = await fetch(`${baseUrl}/api/v1/bookings/`, {
+        const res = await fetch(`${baseUrl}/api/bookings/`, {
           credentials: "include",
         });
 

@@ -37,7 +37,7 @@ export default function NewBookingPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3003/api/v1/bookings", {
+      const res = await fetch("http://localhost:3003/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", 
