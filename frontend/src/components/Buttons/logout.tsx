@@ -7,23 +7,8 @@ export default function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    try {
-      const res = await fetch("http://localhost:3003/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        console.error("Logout failed:", await res.text());
-        return;
-      }
-
-      actions.logout(); 
-      alert("Logged out!");
-      router.push("/login");
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
+    await actions.logout();
+    router.push("/login");
   };
 
   return (
@@ -35,3 +20,4 @@ export default function LogoutButton() {
     </button>
   );
 }
+

@@ -1,24 +1,17 @@
 "use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
 
 interface DeleteProfileButtonProps {
   userId: string;
 }
 
 export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const { actions } = useUser();
+  const router = useRouter();
 
   const handleDelete = async () => {
     if (!confirm("Är du säker på att du vill ta bort ditt konto?")) return;
-
-    setLoading(true);
-    setError(null);
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
@@ -33,23 +26,19 @@ export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps
       }
 
       await actions.logout();
-
       router.push("/login");
     } catch (err: any) {
-      setError(err.message || "Ett fel uppstod.");
-    } finally {
-      setLoading(false);
+      alert(err.message || "Ett fel uppstod.");
     }
   };
 
   return (
     <button
       onClick={handleDelete}
-      disabled={loading}
       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg mt-4"
     >
-      {loading ? "Tar bort..." : "Ta bort mitt konto"}
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      Ta bort mitt konto
     </button>
   );
 }
+

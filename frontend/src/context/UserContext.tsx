@@ -1,4 +1,3 @@
-
 "use client";
 
 import { createContext, useContext, useState, useEffect, PropsWithChildren } from "react";
@@ -14,7 +13,7 @@ export type UserProfile = {
 
 type UserContextType = {
   user: UserProfile | null;
-    loadingUser: boolean;
+  loadingUser: boolean;
   actions: {
     signin: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -36,23 +35,21 @@ const UserContext = createContext(defaultState);
 
 export function UserProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true); 
+  const [loadingUser, setLoadingUser] = useState(true);
 
   const fetchActiveUser = async () => {
     try {
       setLoadingUser(true);
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/activeUser`, {
-        credentials: "include", 
+        credentials: "include",
       });
-
       if (!res.ok) throw new Error("Not authenticated");
-  
-        const data = await res.json();
-        setUser(data.user);
-      
+
+      const data = await res.json();
+      setUser(data.user);
     } catch {
       setUser(null);
-    } finally{
+    } finally {
       setLoadingUser(false);
     }
   };
@@ -66,17 +63,19 @@ export function UserProvider({ children }: PropsWithChildren) {
     });
 
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.error || "Login failed");
 
     await fetchActiveUser();
   };
 
   const logout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+    }
     setUser(null);
   };
 
@@ -84,7 +83,7 @@ export function UserProvider({ children }: PropsWithChildren) {
     fetchActiveUser();
   }, []);
 
-   if (loadingUser) {
+  if (loadingUser) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-solid"></div>
