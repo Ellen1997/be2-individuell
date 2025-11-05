@@ -34,6 +34,7 @@ export default function BookingPage({ params }: Props) {
             return;
         }
 
+
       try {
 
         const response = await fetch(`${baseUrl}/api/bookings/${id}`, {

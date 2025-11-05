@@ -9,7 +9,7 @@ import { useUser } from "@/context/UserContext";
 
 export default function PropertiesPage() {
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-  const { user, actions } = useUser();
+  const { user } = useUser();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,25 +20,25 @@ export default function PropertiesPage() {
   const [minPrice, setMinPrice] = useState<number | "">("");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
 
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(6);
   const [offset, setOffset] = useState(0);
   const [count, setCount] = useState(0);
 
+  const [shouldRefetch, setShouldRefetch] = useState(false);
+
+
+  useEffect(() => {
+  fetchProperties();
+}, []);
 
    useEffect(() => {
-    if (user !== undefined) fetchProperties();
-  }, [user, offset]);
+    if (shouldRefetch) {
+      setShouldRefetch(false);
+      fetchProperties();
+    }
+  }, [offset, shouldRefetch]);
 
   const fetchProperties = async () => {
-    if (user === null) {
-            setError("Du måste vara inloggad för att se properties.");
-            setLoading(false);
-            return;
-        }
-
-        if (user === undefined) {
-            return;
-        }
 
     setLoading(true);
     setError(null);
@@ -78,11 +78,12 @@ export default function PropertiesPage() {
     };
 
       const resetFilters = () => {
+
     setLocation("");
     setMinPrice("");
     setMaxPrice("");
     setSort("");
-    fetchProperties();
+    setShouldRefetch(true);
   };
 
   if (loading) return <p>Laddar properties...</p>;
@@ -154,6 +155,7 @@ export default function PropertiesPage() {
     onClick={() => {
       if (offset - limit >= 0) {
         setOffset(offset - limit);
+        setShouldRefetch(true);
       }
     }}
     disabled={offset === 0}
@@ -170,6 +172,7 @@ export default function PropertiesPage() {
     onClick={() => {
       if (offset + limit < count) {
         setOffset(offset + limit);
+        setShouldRefetch(true);
       }
     }}
     disabled={offset + limit >= count}

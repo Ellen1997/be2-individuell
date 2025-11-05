@@ -6,6 +6,7 @@
   end_date: string;
   total_price: number;
   created_at: string;
+  booking_status: string;
   properties?: {
     property_name: string;
     location: string;

@@ -24,15 +24,6 @@ export default function PropertyPage({ params }: Params) {
 
   useEffect(() => {
     const fetchProperty = async () => {
-       if (user === null) {
-            setError("Du måste vara inloggad för att se properties.");
-            setLoading(false);
-            return;
-        }
-
-        if (user === undefined) {
-            return;
-        }
 
       try {
        

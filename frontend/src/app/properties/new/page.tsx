@@ -30,6 +30,12 @@ export default function NewPropertyPage() {
     } if (user === undefined) {
       return;
     } 
+    if (!user.ispropertyowner) {
+      setError("Du måste vara property owner för att skapa properties.");
+      setLoading(false);
+      router.push("/properties");
+      return;
+    }
   }, [user, actions, router]);
 
 

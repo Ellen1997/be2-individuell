@@ -5,7 +5,7 @@ export interface NewUser {
     email: string;
     phone_number: string;
     isadmin?: boolean;
-    isPropertyOwner?: boolean;
+    ispropertyowner?: boolean;
     bookings?: {
         booking_id?: string,
         start_date?: string,

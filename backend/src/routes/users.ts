@@ -2,13 +2,14 @@ import { Hono } from "hono";
 import { userValidator } from "../validators/usersValidator.js";
 import type { User, NewUser, UserListQuery } from "../../../types/users.js";
 import { requireAuth} from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/auth.js";
 import type { PaginatedListResponse } from "../../../types/general.js"
 
 import * as db from "../database/users.js";
 
 const usersApp = new Hono();
 
-usersApp.get("/", async (c) => {
+usersApp.get("/", requireAdmin, async (c) => {
     const sb = c.get("supabase");
     try {
         const users: PaginatedListResponse<User> = await db.getUsers({}, sb);
@@ -18,15 +19,14 @@ usersApp.get("/", async (c) => {
     }
 });
 
-
-usersApp.get("/:id", async (c)=> {
+usersApp.get("/:id", requireAdmin, async (c)=> {
     const sb = c.get("supabase");
-    const { id } = c.req.param();
+    const id  = c.req.param("id");
     const user = await db.getUser(sb, id)
     return c.json(user, 200);
 })
 
-
+//ANVÄNDS EJ!!!
 usersApp.post("/", userValidator, async (c) => {
 
     try {
@@ -40,7 +40,7 @@ usersApp.post("/", userValidator, async (c) => {
             email: String(payload.email),
             phone_number: String(payload.phone_number),
             isadmin: payload.isadmin ?? false,
-            isPropertyOwner: payload.isPropertyOwner ?? false,
+            ispropertyowner: payload.isPropertyOwner ?? false,
 
         }
 

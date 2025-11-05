@@ -28,6 +28,7 @@ export default function SingleBooking({booking}: SingleBookingProps){
                                Bokning avslutas: {booking.end_date}
                               </h3>
                               <p className="text-gray-600"> Totalt pris för bokning: {booking.total_price}</p>
+                              <p className="text-gray-600">Bokningsstatus: {booking.booking_status}</p>
                               <h2 className="text-lg font-semibold text-gray-900">
                                 Bokning tillhör:
                                 {booking.profileusers?.name}

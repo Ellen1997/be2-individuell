@@ -1,8 +1,10 @@
 "use client";
 import { useUser } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
   const { actions } = useUser();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -18,6 +20,7 @@ export default function LogoutButton() {
 
       actions.logout(); 
       alert("Logged out!");
+      router.push("/login");
     } catch (err) {
       console.error("Logout error:", err);
     }

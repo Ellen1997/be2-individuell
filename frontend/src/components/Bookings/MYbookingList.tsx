@@ -1,10 +1,6 @@
 import type { Booking } from "../../../../types/bookings.js"
-import AcceptBookingButton from "../Buttons/acceptBookingBtn"
-import DeclineBookingButton from "../Buttons/nekaBookingBtn"
 
 import Link from "next/link.js"
-import { useState } from "react"
-
 
 type BookingListProps = {
     bookings: Booking[];
@@ -16,16 +12,14 @@ type BookingListProps = {
 }
 
 
-export default function BookingList({bookings: initialBookings, currentUser}: BookingListProps){
-
-    const [bookings, setBookings] = useState(initialBookings);
+export default function MYBookingList({bookings, currentUser}: BookingListProps){
     
     return (
     <div className="grid gap-4">
       {bookings.map((booking) => {
         const canAccept =
           currentUser &&
-          (currentUser.ispropertyowner || currentUser.isadmin) &&
+          (currentUser.isadmin) &&
           booking.booking_status === "pending";
 
         return (
@@ -46,34 +40,7 @@ export default function BookingList({bookings: initialBookings, currentUser}: Bo
               </div>
             </div>
 
-            {canAccept ? (
-  <div className="flex gap-2 mt-2">
-    <AcceptBookingButton
-      bookingId={booking.booking_id}
-      onStatusChange={(newStatus) =>
-        setBookings((prev) =>
-          prev.map((b) =>
-            b.booking_id === booking.booking_id ? { ...b, booking_status: newStatus } : b
-          )
-        )
-      }
-    />
-    <DeclineBookingButton
-      bookingId={booking.booking_id}
-      onStatusChange={(newStatus) =>
-        setBookings((prev) =>
-          prev.map((b) =>
-            b.booking_id === booking.booking_id ? { ...b, booking_status: newStatus } : b
-          )
-        )
-      }
-    />
-  </div>
-) : (
   <p className="mt-2 font-semibold">Status: {booking.booking_status}</p>
-)}
-
-
 
             <div className="mt-2">
               <Link

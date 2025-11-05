@@ -8,19 +8,6 @@ import * as db from "../database/property.js"
 
 const propertiesApp = new Hono();
 
-// propertiesApp.get("/", async (c) => {
-//     const sb = c.get("supabase");
-
-//     try{
-//         const properties: PaginatedListResponse<Property> = await db.getProperties({}, sb);
-//     return c.json(properties, 200)
-
-//     } catch (err) {
-//         return c.json({error: (err as Error).message}, 500)
-//     }
-    
-// })
-
 propertiesApp.get("/", async (c) => {
   const sb = c.get("supabase");
 
@@ -164,7 +151,7 @@ propertiesApp.patch("/:id", requireAuth, async (c) => {
   }
 });
 
-propertiesApp.delete("/:id", requireAuth, async (c) => {
+propertiesApp.delete("/:id", requireAuth,  async (c) => {
   try {
     const sb = c.get("supabase");
     const user = c.get("user");

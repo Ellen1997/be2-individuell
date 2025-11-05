@@ -25,7 +25,7 @@ export default function ProfileUserPage({ params }: Params) {
   useEffect(() => {
     const fetchUser = async () => {
           if (user === null) {
-            setError("Du måste vara inloggad för att se properties.");
+            setError("Du måste vara inloggad admin för att se users.");
             setLoading(false);
             return;
         }

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server'
-import { requireAuth, withSupabase } from './middleware/auth.js';
+import { requireAdmin, requireAuth, withSupabase } from './middleware/auth.js';
 import { cors } from 'hono/cors';
 
 import usersApp from './routes/users.js'
@@ -47,7 +47,9 @@ app.get('/', (c) => {
 })
 app.route('/auth', authApp )
 
-app.use('/api/*', requireAuth)
+app.use('/api/users', requireAuth)
+app.use('/api/bookings', requireAuth)
+app.use('/admin/*', requireAdmin)
 
 app.route('/api/users', usersApp )
 app.route('/api/properties', propertiesApp)

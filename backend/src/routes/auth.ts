@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception"
 import * as db from "../database/users.js";
 import { registerValidator } from "../validators/registerValidator.js";
 import { setCookie } from "hono/cookie";
+import { requireAdmin } from "../middleware/auth.js";
 
 export const authApp = new Hono()
 
@@ -130,5 +131,95 @@ authApp.post("/logout", async (c) => {
   setCookie(c, "refresh_token", "", { maxAge: 0, path: "/" });
   return c.json({ message: "Logged out" }, 200);
 });
+
+
+authApp.patch("/authusers/:id", requireAdmin, async (c) => {
+  const sb = c.get("supabase");
+  const user = c.get("user");
+  const userId = c.req.param("id");
+
+  if (!user) {
+    throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  const { data: activeProfile, error: activeError } = await sb
+    .from("profileusers")
+    .select("isadmin")
+    .eq("profileuser_id", user.id)
+    .single();
+
+  if (activeError || !activeProfile) {
+    throw new HTTPException(404, { message: "Your profile not found" });
+  }
+
+  if (user.id !== userId && !activeProfile.isadmin) {
+    throw new HTTPException(403, {
+      message: "Forbidden: You can only update your own profile or be admin",
+    });
+  }
+
+  const body = await c.req.json();
+
+  if (!activeProfile.isadmin) {
+    delete body.isadmin;
+  }
+
+  const { data, error } = await sb
+    .from("profileusers")
+    .update(body)
+    .eq("profileuser_id", userId)
+    .select("*")
+    .single();
+
+  if (error) {
+    throw new HTTPException(400, { message: error.message });
+  }
+
+  return c.json({ message: "User updated successfully", user: data }, 200);
+});
+
+
+authApp.delete("/authusers/:id", requireAdmin, async (c) => {
+  const sb = c.get("supabase");
+  const user = c.get("user");
+  const userId = c.req.param("id");
+
+  if (!user) {
+    throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  const { data: activeProfile, error: activeError } = await sb
+    .from("profileusers")
+    .select("isadmin")
+    .eq("profileuser_id", user.id)
+    .single();
+
+  if (activeError || !activeProfile) {
+    throw new HTTPException(404, { message: "Your profile not found" });
+  }
+
+  if (user.id !== userId && !activeProfile.isadmin) {
+    throw new HTTPException(403, {
+      message: "Forbidden: You can only delete your own account or be admin",
+    });
+  }
+
+  const { error: deleteProfileError } = await sb
+    .from("profileusers")
+    .delete()
+    .eq("profileuser_id", userId);
+
+  if (deleteProfileError) {
+    throw new HTTPException(400, { message: deleteProfileError.message });
+  }
+
+  try {
+    await sb.auth.admin.deleteUser(userId);
+  } catch {
+  }
+
+  return c.json({ message: "User deleted successfully" }, 200);
+});
+
 
 export default authApp;

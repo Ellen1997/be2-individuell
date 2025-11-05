@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { Property } from "../../../../../types/property";
-import { useRouter } from "next/navigation";
 
-export default function PropertyOwnerPage() {
+export default function PropertyAdminPage() {
   const { user } = useUser();
-  const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
   const [properties, setProperties] = useState<Property[]>([]);
@@ -17,38 +15,36 @@ export default function PropertyOwnerPage() {
   const [editForm, setEditForm] = useState<Partial<Property>>({});
 
   useEffect(() => {
-    if (user === null) {
-      setError("Du måste vara inloggad som property owner för att se denna sida.");
+    if (!user) {
+       setError("Du måste vara inloggad som admin för att se denna sida.");
+      setLoading(false);
+      return;
+    } 
+
+        if (!user.isadmin) {
+      setError("Du måste vara admin för att se denna sida.");
       setLoading(false);
       return;
     }
-
-     if (!user.ispropertyowner) {
-      setError("Du måste vara property owner för att skapa properties.");
-      setLoading(false);
-      router.push("/properties");
-      return;
-    }
-
-    if (user) fetchOwnedProperties();
+      
+      
+      fetchAllProperties();
   }, [user]);
 
-  const fetchOwnedProperties = async () => {
-    if (!user) return;
-
+  const fetchAllProperties = async () => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await fetch(
-        `${baseUrl}/api/properties/owner/${user.id}`,
+        `${baseUrl}/api/properties`,
         { credentials: "include" }
       );
 
-      if (!response.ok) throw new Error("Kunde inte hämta dina properties");
+      if (!response.ok) throw new Error("Kunde inte hämta alla properties");
 
       const data = await response.json();
-      setProperties(data);
+      setProperties(Array.isArray(data) ? data : data.data || data.properties || []);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -88,7 +84,7 @@ export default function PropertyOwnerPage() {
 
       if (!response.ok) throw new Error("Kunde inte spara ändringar");
 
-      await fetchOwnedProperties();
+      await fetchAllProperties();
       cancelEditing();
     } catch (err: any) {
       setError(err.message);
@@ -106,20 +102,20 @@ export default function PropertyOwnerPage() {
 
       if (!response.ok) throw new Error("Kunde inte ta bort property");
 
-      await fetchOwnedProperties();
+      await fetchAllProperties();
     } catch (err: any) {
       setError(err.message);
     }
   };
 
-  if (loading) return <p>Laddar dina properties...</p>;
+  if (loading) return <p>Laddar alla properties...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Mina Properties</h1>
+      <h1 className="text-2xl font-bold mb-4">Alla Properties</h1>
       {properties.length === 0 ? (
-        <p>Du har inga properties ännu.</p>
+        <p>Det finns inga properties ännu.</p>
       ) : (
         <ul className="space-y-4">
           {properties.map((p) => (

@@ -7,7 +7,7 @@ export interface NewProperty {
     location: string;
     pricePerNight: number;
     image_url?: string;
-    owner_id?: string;
+    owner_id: string;
 }
 
 export interface Property extends NewProperty {

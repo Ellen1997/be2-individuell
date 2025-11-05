@@ -4,6 +4,7 @@ import "./globals.css";
 import NavLinks from "@/components/navlinks";
 import LogoutButton from "@/components/Buttons/logout";
 import UserProviderClient from "@/components/providers/UserProviderClient";
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,14 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <UserProviderClient>
       
-        <header className="sticky top-0 z-50 bg-white shadow-sm p-4 flex justify-between items-center">
-          <NavLinks />
-          <LogoutButton />
-            <h1 className="text-lg font-semibold text-white-800">
-            Individuella uppgift
-          </h1>
-
-        </header>
+          <Header />
         {children}
         </UserProviderClient>
     

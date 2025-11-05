@@ -16,7 +16,7 @@ export default function ProfileUsersPage() {
     useEffect(() => {
       const fetchData = async () => {
         if (user === null) {
-            setError("Du måste vara inloggad för att se profiles.");
+            setError("Du måste vara inloggad admin för att se profiles.");
             setLoading(false);
             return;
         }
@@ -56,7 +56,7 @@ export default function ProfileUsersPage() {
           Tillbaka till startsidan
         </Link>
         <h1 className="text-2xl font-bold">USERS</h1>
-        <p className="text-red-600">Du måste vara inloggad för att se users.</p>
+        <p className="text-red-600">{error}</p>
       </div>
     );
 

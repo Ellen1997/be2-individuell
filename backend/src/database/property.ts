@@ -6,7 +6,7 @@ export async function getProperties(query: PropertyListQuery, sb: SupabaseClient
 Promise<PaginatedListResponse<Property>>{
 
   const startIndex = query.offset || 0;
-  const endIndex = startIndex + (query.limit || 10) - 1;
+  const endIndex = startIndex + (query.limit || 15) - 1;
 
     let _query = sb
     .from("properties")

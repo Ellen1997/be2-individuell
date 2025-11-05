@@ -55,7 +55,7 @@ export default function NewBookingPage() {
       }
 
 
-      router.push("/bookings");
+      router.push("/");
     } catch (err: any) {
       setError(err.message);
     } finally {
