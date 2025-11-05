@@ -3,6 +3,7 @@ import { propertyValidator } from "../validators/propertyValidator.js";
 import type { Property, NewProperty, PropertyListQuery } from "../../../types/property.js"
 import { requireAuth } from "../middleware/auth.js";
 import type { PaginatedListResponse } from "../../../types/general.js"
+import { supabaseAdmin } from "../lib/supabaseAdmin.js";
 
 import * as db from "../database/property.js"
 
@@ -139,7 +140,17 @@ propertiesApp.patch("/:id", requireAuth, async (c) => {
         }
 
     const existing = await db.getProperty(sb, id);
-    if (!existing || existing.owner_id !== user.id) {
+    if (!existing) {
+      return c.json({ error: "Property hittades ej" }, 404);
+    }
+
+     const { data: profile } = await sb
+      .from("profileusers")
+      .select("isadmin")
+      .eq("profileuser_id", user.id)
+      .single();
+
+        if (existing.owner_id !== user.id && !profile?.isadmin) {
       return c.json({ error: "Du har inte behörighet att ändra denna property." }, 403);
     }
 
@@ -162,7 +173,17 @@ propertiesApp.delete("/:id", requireAuth,  async (c) => {
         }
 
     const existing = await db.getProperty(sb, id);
-    if (!existing || existing.owner_id !== user.id) {
+    if (!existing) {
+      return c.json({ error: "ingen property hittades" }, 404);
+    }
+
+    const { data: profile } = await sb
+      .from("profileusers")
+      .select("isadmin")
+      .eq("profileuser_id", user.id)
+      .single();
+
+        if (existing.owner_id !== user.id && !profile?.isadmin) {
       return c.json({ error: "Du har inte behörighet att ta bort denna property." }, 403);
     }
 

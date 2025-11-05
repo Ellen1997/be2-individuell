@@ -71,17 +71,6 @@ bookingsApp.get("/property/:id", requireOwnerOrAdmin, async (c) => {
 });
 
 bookingsApp.get("/user/:id", async (c) => {
-//   const sb = c.get("supabase");
-//   const userId: string = c.req.param("id");
-//   try {
-//     const bookings: Booking[] = await db.getBookingsByUser(sb, userId);
-//     return c.json({
-//         message: "Bokningar för användare:",
-//         bookings: bookings}, 200);
-//   } catch (err) {
-//     return c.json({ error: (err as Error).message }, 500);
-//   }
-// });
 
   try {
     const sb = c.get("supabase");

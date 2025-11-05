@@ -1,6 +1,7 @@
 import type { Booking } from "../../../../types/bookings.js"
 import AcceptBookingButton from "../Buttons/acceptBookingBtn"
 import DeclineBookingButton from "../Buttons/nekaBookingBtn"
+import DeleteBookingButton from "../Buttons/DeleteBookingBtn"
 
 import Link from "next/link.js"
 import { useState } from "react"
@@ -68,6 +69,14 @@ export default function BookingList({bookings: initialBookings, currentUser}: Bo
         )
       }
     />
+    <DeleteBookingButton
+    bookingId={booking.booking_id}
+    onDeleted={() =>
+      setBookings((prev) =>
+        prev.filter((b) => b.booking_id !== booking.booking_id)
+      )
+    }
+  />
   </div>
 ) : (
   <p className="mt-2 font-semibold">Status: {booking.booking_status}</p>

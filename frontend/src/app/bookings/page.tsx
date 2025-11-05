@@ -52,8 +52,6 @@ export default function BookingPage() {
         const data: PaginatedListResponse<Booking> = await res.json();
         setBookings(data.data);
         setCount(data.count);
-        // setLimit(data.limit);
-        // setOffset(data.offset);
       } catch (err: any) {
         setError(err.message || "Kunde inte hämta bokningar.");
       } finally {

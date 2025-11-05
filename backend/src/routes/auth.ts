@@ -3,7 +3,8 @@ import { HTTPException } from "hono/http-exception"
 import * as db from "../database/users.js";
 import { registerValidator } from "../validators/registerValidator.js";
 import { setCookie } from "hono/cookie";
-import { requireAdmin } from "../middleware/auth.js";
+import { requireAuth } from "../middleware/auth.js";
+import { supabaseAdmin } from "../lib/supabaseAdmin.js";
 
 export const authApp = new Hono()
 
@@ -133,7 +134,7 @@ authApp.post("/logout", async (c) => {
 });
 
 
-authApp.patch("/authusers/:id", requireAdmin, async (c) => {
+authApp.patch("/authusers/:id", async (c) => {
   const sb = c.get("supabase");
   const user = c.get("user");
   const userId = c.req.param("id");
@@ -152,7 +153,7 @@ authApp.patch("/authusers/:id", requireAdmin, async (c) => {
     throw new HTTPException(404, { message: "Your profile not found" });
   }
 
-  if (user.id !== userId && !activeProfile.isadmin) {
+  if (user.id !== userId || !activeProfile.isadmin) {
     throw new HTTPException(403, {
       message: "Forbidden: You can only update your own profile or be admin",
     });
@@ -178,43 +179,42 @@ authApp.patch("/authusers/:id", requireAdmin, async (c) => {
   return c.json({ message: "User updated successfully", user: data }, 200);
 });
 
-
-authApp.delete("/authusers/:id", requireAdmin, async (c) => {
-  const sb = c.get("supabase");
-  const user = c.get("user");
-  const userId = c.req.param("id");
+authApp.delete("/authusers/:id", requireAuth, async (c) => {
+  const user = c.get("user"); 
+  const userIdToDelete = c.req.param("id");
 
   if (!user) {
     throw new HTTPException(401, { message: "Unauthorized" });
   }
 
-  const { data: activeProfile, error: activeError } = await sb
+  const sb = c.get("supabase");
+  const { data: profile, error: profileError } = await sb
     .from("profileusers")
     .select("isadmin")
     .eq("profileuser_id", user.id)
     .single();
 
-  if (activeError || !activeProfile) {
+  if (profileError) {
     throw new HTTPException(404, { message: "Your profile not found" });
   }
 
-  if (user.id !== userId && !activeProfile.isadmin) {
+  if (user.id !== userIdToDelete && !profile.isadmin) {
     throw new HTTPException(403, {
-      message: "Forbidden: You can only delete your own account or be admin",
+      message: "Forbidden: Only admin can delete other users",
     });
   }
 
-  const { error: deleteProfileError } = await sb
+  const { error: deleteProfileError } = await supabaseAdmin
     .from("profileusers")
     .delete()
-    .eq("profileuser_id", userId);
+    .eq("profileuser_id", userIdToDelete);
 
   if (deleteProfileError) {
     throw new HTTPException(400, { message: deleteProfileError.message });
   }
 
   try {
-    await sb.auth.admin.deleteUser(userId);
+    await supabaseAdmin.auth.admin.deleteUser(userIdToDelete);
   } catch {
   }
 

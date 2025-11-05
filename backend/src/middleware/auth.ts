@@ -52,43 +52,21 @@ export async function optionalAuth(c: Context, next: Next) {
   return withSupabase(c, next)
 }
 
+
 export async function requireAuth(c: Context, next: Next) {
-  await withSupabase(c, async () => {})
-  const user = c.get("user")
-  console.log("Authenticated user:", user)
-  if (!user) {
-    throw new HTTPException(401, { message: "Unauthorized" })
+  const sb = c.get("supabase");
+
+  const { data, error } = await sb.auth.getUser();
+
+  if (error || !data?.user) {
+    throw new HTTPException(401, { message: "Unauthorized" });
   }
-  return next()
+  c.set("user", data.user);
+
+  console.log("Authenticated user:", data.user.email);
+
+  await next();
 }
-
-//OM NEDAN SKA ANVÄNDAS MÅSTE DEN GÖRAS OM I ENLIGHET MED DEN NYARE requireOwnerOrAdmin FUNKTIONEN!!
-// export async function requirePropertyOwner(c: Context, next: Next) {
-//   await withSupabase(c, async () => {});
-
-//   const sb = c.get("supabase");
-//   const user = c.get("user");
-
-//   if (!user) {
-//     throw new HTTPException(401, { message: "Unauthorized" });
-//   }
-
-//   const { data: profile, error: profileError } = await sb
-//     .from("profileusers")
-//     .select("ispropertyowner, isadmin")
-//     .eq("profileuser_id", user.id)
-//     .single();
-
-//   if (profileError || !profile) {
-//     throw new HTTPException(404, { message: "User profile not found" });
-//   }
-
-//   if (profile.ispropertyowner === false && profile.isadmin === false) {
-//     throw new HTTPException(403, { message: "Forbidden: You must be property owner" });
-//   }
-
-//   return next();
-// }
 
 export async function requireOwnerOrAdmin(c: Context, next: Next) {
   await withSupabase(c, async () => {});

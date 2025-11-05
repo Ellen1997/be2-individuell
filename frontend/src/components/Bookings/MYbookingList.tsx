@@ -1,4 +1,6 @@
 import type { Booking } from "../../../../types/bookings.js"
+import DeleteBookingButton from "../Buttons/DeleteBookingBtn";
+import { useState } from "react"
 
 import Link from "next/link.js"
 
@@ -12,8 +14,8 @@ type BookingListProps = {
 }
 
 
-export default function MYBookingList({bookings, currentUser}: BookingListProps){
-    
+export default function MYBookingList({bookings: initialBookings, currentUser}: BookingListProps){
+    const [bookings, setBookings] = useState(initialBookings);
     return (
     <div className="grid gap-4">
       {bookings.map((booking) => {
@@ -50,6 +52,14 @@ export default function MYBookingList({bookings, currentUser}: BookingListProps)
                 Detaljsida Booking
               </Link>
             </div>
+              <DeleteBookingButton
+                bookingId={booking.booking_id}
+                onDeleted={() =>
+                  setBookings((prev) =>
+                    prev.filter((b) => b.booking_id !== booking.booking_id)
+                  )
+                }
+              />
           </div>
         );
       })}
