@@ -13,7 +13,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [limit, setLimit] = useState(7);
+  const [limit, setLimit] = useState(9);
   const [offset, setOffset] = useState(0);
   const [count, setCount] = useState(0);
 
