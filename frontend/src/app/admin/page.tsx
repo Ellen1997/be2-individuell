@@ -63,6 +63,12 @@ export default function ProfilePage() {
       >Bokningar av admins uthyrningsobjekt</Link>
       <div className="mt-1"></div>
 
+      <Link
+      href={"/properties"}
+      className=" font-bold text-blue-800"
+      >Utforska uthyrningsobjekt</Link>
+      <div className="mt-1"></div>
+
       <DeleteProfileButton userId={user.id} />
     </div>
     </>
