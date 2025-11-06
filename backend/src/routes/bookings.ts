@@ -57,7 +57,7 @@ bookingsApp.post("/", requireAuth, bookingValidator, async (c) => {
 });
 
 
-bookingsApp.get("/property/:id", requireOwnerOrAdmin, async (c) => {
+bookingsApp.get("/property/:id", async (c) => {
   const sb = c.get("supabase");
   const propertyId: string = c.req.param("id");
   try {

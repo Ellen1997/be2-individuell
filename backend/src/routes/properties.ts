@@ -4,6 +4,7 @@ import type { Property, NewProperty, PropertyListQuery } from "../../../types/pr
 import { requireAuth } from "../middleware/auth.js";
 import type { PaginatedListResponse } from "../../../types/general.js"
 import { supabaseAdmin } from "../lib/supabaseAdmin.js";
+import { requireOwnerOrAdmin } from "../middleware/auth.js";
 
 import * as db from "../database/property.js"
 
@@ -128,7 +129,7 @@ propertiesApp.put("/:id", requireAuth, propertyValidator, async (c) => {
   }
 });
 
-propertiesApp.patch("/:id", requireAuth, async (c) => {
+propertiesApp.patch("/:id", requireAuth, requireOwnerOrAdmin, async (c) => {
   try {
     const sb = c.get("supabase");
     const user = c.get("user");
@@ -149,11 +150,7 @@ propertiesApp.patch("/:id", requireAuth, async (c) => {
       .select("isadmin")
       .eq("profileuser_id", user.id)
       .single();
-
-        if (existing.owner_id !== user.id && !profile?.isadmin) {
-      return c.json({ error: "Du har inte behörighet att ändra denna property." }, 403);
-    }
-
+      
     const patchedProperty = await db.patchProperty(sb, id, fields);
     return c.json(patchedProperty, 200);
   } catch (err) {
@@ -162,7 +159,7 @@ propertiesApp.patch("/:id", requireAuth, async (c) => {
   }
 });
 
-propertiesApp.delete("/:id", requireAuth,  async (c) => {
+propertiesApp.delete("/:id", requireAuth, requireOwnerOrAdmin,  async (c) => {
   try {
     const sb = c.get("supabase");
     const user = c.get("user");
@@ -182,10 +179,6 @@ propertiesApp.delete("/:id", requireAuth,  async (c) => {
       .select("isadmin")
       .eq("profileuser_id", user.id)
       .single();
-
-        if (existing.owner_id !== user.id && !profile?.isadmin) {
-      return c.json({ error: "Du har inte behörighet att ta bort denna property." }, 403);
-    }
 
     await db.deleteProperty(sb, id);
     return c.json({ success: true, message: "Property borttagen." }, 200);
