@@ -62,11 +62,8 @@ export default function ProfileUsersPage() {
 
     return(
         <div className="p-16">
-            <Link href="/" className="text-blue-600 underline">
-              Tillbaka till startsidan
-            </Link>
 
-            <h1 className="text-2xl font-bold">USERS</h1>
+            <h1 className="text-2xl font-bold">Användare</h1>
             <UsersList users={profileusers} />
         </div>
     )

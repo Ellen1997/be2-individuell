@@ -64,7 +64,9 @@ export default function NewBookingPage() {
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto bg-white shadow-md rounded-lg">
+    <>
+<div className="mt-8"></div>
+    <div className="p-8 max-w-md mx-auto bg-amber-50 shadow-md rounded-lg">
       <h2 className="text-xl font-semibold mb-4">Boka denna bostad</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label>
@@ -97,5 +99,6 @@ export default function NewBookingPage() {
         </button>
       </form>
     </div>
+    </>
   );
 }

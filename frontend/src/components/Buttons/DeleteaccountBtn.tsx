@@ -11,7 +11,7 @@ export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (!confirm("Är du säker på att du vill ta bort ditt konto?")) return;
+    if (!confirm("Är du säker på att du vill ta bort ditt konto??")) return;
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
@@ -35,9 +35,9 @@ export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps
   return (
     <button
       onClick={handleDelete}
-      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg mt-4"
+      className="bg-red-500 hover:bg-red-600 text-white text-sm px-1 py-1 rounded-lg mt-3"
     >
-      Ta bort mitt konto
+      Radera konto
     </button>
   );
 }

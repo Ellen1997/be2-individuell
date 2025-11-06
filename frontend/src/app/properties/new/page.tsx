@@ -80,10 +80,10 @@ export default function NewPropertyPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-xl p-6 w-full max-w-md"
+        className="bg-amber-100 shadow-md rounded-xl p-6 w-full max-w-md"
       >
         <h1 className="text-xl font-semibold mb-4 text-center">Skapa ny Property</h1>
 
@@ -149,8 +149,8 @@ export default function NewPropertyPage() {
         </button>
 
         <p className="text-sm mt-4 text-center">
-          <a href="/properties" className="text-blue-600 underline">
-            Tillbaka till alla properties
+          <a href="/profile/propOwner" className="text-blue-600 underline">
+            Tillbaks till mina properties
           </a>
         </p>
       </form>

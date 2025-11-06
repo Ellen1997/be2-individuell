@@ -19,7 +19,7 @@ export default function LoginPage() {
 
     try {
       await actions.signin(email, password);
-      router.push("/");
+      router.push("/properties");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -28,8 +28,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-xl p-6 w-full max-w-sm">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <form onSubmit={handleSubmit} className="bg-amber-100 shadow-md rounded-xl p-6 w-full max-w-sm">
         <h1 className="text-xl font-semibold mb-4 text-center">Logga in</h1>
         {error && <p className="text-red-500 text-sm mb-3 text-center">{error}</p>}
         <label className="block mb-2 text-sm font-medium">E-post</label>

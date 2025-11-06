@@ -72,10 +72,9 @@ export default function BookingOwnerOfPropPage() {
 
   return (
     <div className="p-16">
-      <Link href="/" className="text-blue-600 underline">
-        Tillbaka till startsidan
-      </Link>
-      <h1 className="text-2xl font-bold">BOOKINGS</h1>
+      <p className="text-2xl font-bold text-neutral-900">Bokningar</p>
+      <p className="text-xl font-bold text-gray-600">på mina uthyrningsobjekt:</p>
+      <div className="mt-6"></div>
 
          {bookings.length === 0 ? (
         <p className="text-gray-600">Det finns inga bokningar ännu.</p>

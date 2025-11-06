@@ -73,9 +73,6 @@ export default function BookingPage() {
   if (error)
     return (
       <div className="p-16">
-        <Link href="/" className="text-blue-600 underline">
-          Tillbaka till startsidan
-        </Link>
         <h1 className="text-2xl font-bold">BOOKINGS</h1>
         <p className="text-red-600">{error}</p>
       </div>
@@ -83,10 +80,7 @@ export default function BookingPage() {
 
   return (
     <div className="p-16">
-      <Link href="/" className="text-blue-600 underline">
-        Tillbaka till startsidan
-      </Link>
-      <h1 className="text-2xl font-bold">BOOKINGS</h1>
+      <h1 className="text-2xl font-bold">Alla bokningar</h1>
   
       {user && <BookingList bookings={bookings} currentUser={{
        id: user.id,

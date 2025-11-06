@@ -7,10 +7,10 @@ type UsersListProps = {
 
 export default function UsersList({users}: UsersListProps){
     return(
-        <div className="grid gap-4">
+        <div className="grid gap-5">
             {users.map((user) => (
                 <div key={user.profileuser_id}
-                className="border rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
+                className="border rounded-5xl p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
                     <div className="flex justify-between items-start">
                         <div>
                                 <h3 className="text-lg font-semibold text-gray-900">

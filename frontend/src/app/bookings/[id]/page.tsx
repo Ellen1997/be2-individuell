@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -17,6 +18,7 @@ export default function BookingPage({ params }: Props) {
 
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
   const { user, actions } = useUser();
+  const router = useRouter();
 
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,9 +65,6 @@ export default function BookingPage({ params }: Props) {
   if (error)
     return (
       <div className="p-16">
-        <Link href="/" className="text-blue-600 underline">
-          Tillbaka till startsidan
-        </Link>
         <p className="text-red-600 mt-4">{error}</p>
       </div>
     );
@@ -74,11 +73,16 @@ export default function BookingPage({ params }: Props) {
 
   return (
     <div className="p-16">
-      <Link href="/" className="text-blue-600 underline">
-        Tillbaka till startsidan
-      </Link>
-      <h1 className="text-2xl font-bold mb-4">BOKNINGS DETALJ</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">BOKNINGS DETALJ</h1>
       <SingleBooking booking={booking} />
+      <div className="mt-4"></div>
+
+         <button
+      onClick={() => router.back()}
+      className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
+    >
+      Tillbaka
+    </button>
     </div>
   );
 }

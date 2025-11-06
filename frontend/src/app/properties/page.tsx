@@ -6,6 +6,7 @@ import { PaginatedListResponse } from "../../../../types/general";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
+import IntroSection from "@/components/Intro";
 
 export default function PropertiesPage() {
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
@@ -90,21 +91,25 @@ export default function PropertiesPage() {
   if (error)
    
     return (
+      <div>
+
       <div className="p-16">
-        <Link href="/" className="text-blue-600 underline">
-          Tillbaka till startsidan
-        </Link>
         <h1 className="text-2xl font-bold">PROPERTIES</h1>
         <p className="text-red-600 mt-4">{error}</p>
+      </div>
       </div>
     );
 
   return (
+    <div>
+      <IntroSection/>
+
     <div className="p-16">
-      <Link href="/" className="text-blue-600 underline">
-        Tillbaka till startsidan
-      </Link>
-      <h1 className="text-2xl font-bold">PROPERTY</h1>
+      <h1 className="text-2xl font-bold text-gray-600">Uthyrningsobjekt</h1>
+      <div className="mt-2"></div>
+      <h1 className="text-sm font-bold text-gray-600">Pricksäker sökning med filterna nedan</h1>
+
+
 
       <div className="flex gap-4 mb-6 flex-wrap">
         <input
@@ -183,7 +188,10 @@ export default function PropertiesPage() {
 </div>
 
     </div>
+
+    </div>
   );
+
 }
 
 

@@ -14,7 +14,6 @@ export default function NavLinks({ guest, customer, owner, admin }: NavLinksProp
 
   if (guest) {
     links = [
-      { href: "/", label: "Hem" },
       { href: "/login", label: "Logga in" },
       { href: "/register", label: "Registrera" },
       { href: "/properties", label: "Utforska boenden" },
@@ -23,28 +22,32 @@ export default function NavLinks({ guest, customer, owner, admin }: NavLinksProp
 
   if (customer) {
     links = [
-      { href: "/", label: "Hem" },
       { href: "/properties", label: "Utforska boenden" },
-      { href: "/bookings/ownerOfProp", label: "Mina bokningar" },
+      { href: "/profile/mybookings", label: "Mina bokningar" },
+      { href: "/profile", label: "Profil" }
+
     ];
   }
 
   if (owner) {
     links = [
-      { href: "/", label: "Hem" },
       { href: "/profile/propOwner", label: "Mina properties" },
       { href: "/properties/new", label: "Lägg till ny property" },
       { href: "/bookings/ownerOfProp", label: "Bokningar av mina bostäder" },
       { href: "/properties", label: "Utforska boenden" },
+      { href: "/profile", label: "Profil" }
     ];
   }
 
   if (admin) {
     links = [
-      { href: "/", label: "Hem" },
+  
       { href: "/admin/users", label: "Hantera användare" },
+      { href: "/profileusers", label: "Detaljer användare"},
       { href: "/bookings", label: "Hantera Bokningar" },
-      { href: "/admin/properties", label: "Hantera properties" }
+      { href: "/admin/properties", label: "Hantera properties" },
+      { href: "/admin", label: "Admin" },
+
     ];
   }
 
@@ -54,7 +57,7 @@ export default function NavLinks({ guest, customer, owner, admin }: NavLinksProp
         <Link
           key={link.href}
           href={link.href}
-          className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+          className="text-balance text-gray-700 hover:text-blue-600 transition-colors font-medium"
         >
           {link.label}
         </Link>

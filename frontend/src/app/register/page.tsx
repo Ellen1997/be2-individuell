@@ -50,10 +50,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <form
         onSubmit={handleRegister}
-        className="bg-white shadow-md rounded-xl p-6 w-full max-w-sm"
+        className="bg-amber-100 shadow-md rounded-xl p-6 w-full max-w-sm"
       >
         <h1 className="text-xl font-semibold mb-4 text-center">Registrera dig</h1>
 
@@ -100,7 +100,7 @@ export default function RegisterPage() {
           className="w-full border rounded-md p-2 mb-3"
         />
 
-        {/* <div className="flex items-center mb-4">
+        <div className="flex items-center mb-4">
           <input
             type="checkbox"
             name="ispropertyowner"
@@ -108,8 +108,8 @@ export default function RegisterPage() {
             onChange={handleChange}
             className="mr-2"
           />
-          <label className="text-sm">Jag är en Property Owner</label>
-        </div> */}
+          <label className="text-sm">Jag är en uthyrare</label>
+        </div>
 
         <button
           type="submit"

@@ -53,21 +53,23 @@ export default function BookingPage() {
   if (error)
     return (
       <div className="p-16">
-        <Link href="/" className="text-blue-600 underline">
-          Tillbaka till startsidan
-        </Link>
         <h1 className="text-2xl font-bold">BOOKINGS</h1>
         <p className="text-red-600">{error}</p>
       </div>
     );
 
     console.log("Current bookings:", bookings);
+
+    if(bookings.length === 0)
+        return(
+         <div className="p-16">
+        <h1 className="text-2xl font-bold">Mina bokningar</h1>
+        <p className="text-gray-600">Du har inga bokningar ännu...</p>
+      </div>
+        );
   return (
     <div className="p-16">
-      <Link href="/" className="text-blue-600 underline">
-        Tillbaka till startsidan
-      </Link>
-      <h1 className="text-2xl font-bold mb-4">BOOKINGS</h1>
+      <h1 className="text-2xl font-bold mb-4">Mina bokningar</h1>
 
       {user && (
         <MYbookingList

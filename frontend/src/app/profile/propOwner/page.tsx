@@ -116,14 +116,14 @@ export default function PropertyOwnerPage() {
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Mina Properties</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4 text-gray-600">Mina Uthyrningsobjekt</h1>
       {properties.length === 0 ? (
         <p>Du har inga properties ännu.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-6">
           {properties.map((p) => (
-            <li key={p.property_id} className="border rounded p-4">
+            <li key={p.property_id} className="border rounded p-4 bg-amber-100">
               {editingId === p.property_id ? (
                 <div className="space-y-2">
                   <input
@@ -190,11 +190,13 @@ export default function PropertyOwnerPage() {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-1">
-                  <p className="font-semibold">{p.property_name}</p>
+                <div className="space-y-1 bg-amber-100">
+                  <p className="font-semibold text-2xl text-gray-500">{p.property_name}</p>
+                  <p className="font-extrabold  text-gray-500">Plats</p> 
                   <p>{p.location}</p>
-                  <p>{p.description}</p>
-                  <p>{p.pricePerNight} kr/natt</p>
+                  <p className="font-extrabold  text-gray-500">Beskrivning</p>
+                    <p>{p.description}</p>
+                  <p className="font-bold"> Pris: {p.pricePerNight} kr/natt</p>
                   {p.image_url && (
                     <img
                       src={p.image_url}
@@ -205,13 +207,13 @@ export default function PropertyOwnerPage() {
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => startEditing(p)}
-                      className="bg-blue-600 text-white px-4 py-1 rounded"
+                      className="bg-blue-600 text-white px-2 py-1 rounded"
                     >
                       Redigera
                     </button>
                     <button
                       onClick={() => deleteProperty(p.property_id)}
-                      className="bg-red-600 text-white px-4 py-1 rounded"
+                      className="bg-red-600 text-white px-2 py-1 rounded"
                     >
                       Ta bort
                     </button>

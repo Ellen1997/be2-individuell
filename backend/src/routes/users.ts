@@ -1,7 +1,5 @@
 import { Hono } from "hono";
-import { userValidator } from "../validators/usersValidator.js";
-import type { User, NewUser, UserListQuery } from "../../../types/users.js";
-import { requireAuth} from "../middleware/auth.js";
+import type { User } from "../../../types/users.js";
 import { requireAdmin } from "../middleware/auth.js";
 import type { PaginatedListResponse } from "../../../types/general.js"
 
@@ -24,32 +22,6 @@ usersApp.get("/:id", requireAdmin, async (c)=> {
     const id  = c.req.param("id");
     const user = await db.getUser(sb, id)
     return c.json(user, 200);
-})
-
-//ANVÄNDS EJ!!!
-usersApp.post("/", userValidator, async (c) => {
-
-    try {
-        const sb = c.get("supabase");
-
-        const payload = c.req.valid("json");
-
-        const newUser: NewUser = {
-            
-            name: String(payload.name),
-            email: String(payload.email),
-            phone_number: String(payload.phone_number),
-            isadmin: payload.isadmin ?? false,
-            ispropertyowner: payload.isPropertyOwner ?? false,
-
-        }
-
-        const user: User = await db.createUser(sb, newUser);
-        return c.json(user, 201);
-    } catch (err) {
-        console.log(err)
-        return c.json(err)
-    }
 })
 
 export default usersApp;

@@ -9,7 +9,7 @@ export default function Header() {
 
   if (loadingUser) {
     return (
-      <header className="sticky top-0 z-50 bg-white shadow-sm p-4">
+      <header className="sticky top-0 z-100 bg-white shadow-sm p-4">
         <p>Laddar...</p>
       </header>
     );
@@ -17,8 +17,9 @@ export default function Header() {
 
   if (!user) {
     return (
-      <header className="sticky top-0 z-50 bg-gray-100 shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Välkommen!</h1>
+       <header className="sticky top-0 z-50 w-full shadow-md py-8 px-8 flex justify-between items-center h-18"
+      style={{backgroundColor: "rgb(246, 233, 200, 0.8)"}}>
+        <h1 className="text-lg font-semibold  text-gray-800">Välkommen!</h1>
         <NavLinks guest />
       </header>
     );
@@ -26,8 +27,9 @@ export default function Header() {
 
   if (!user.ispropertyowner && !user.isadmin) {
     return (
-      <header className="sticky top-0 z-50 bg-blue-100 shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Hej {user.name || user.email}</h1>
+       <header className="sticky top-0 z-50 w-full shadow-md py-8 px-8 flex justify-between items-center h-16"
+      style={{backgroundColor: "rgb(246, 233, 200, 0.8)"}}>
+        <h1 className="text-lg font-semibold text-gray-800">Hej {user.name || user.email}!</h1>
         <div className="flex items-center gap-4">
           <NavLinks customer />
           <LogoutButton />
@@ -36,11 +38,13 @@ export default function Header() {
     );
   }
 
-  if (user.isadmin) {
+
+    if (user.isadmin) {
     return (
-      <header className="sticky top-0 z-50 bg-red-100 shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Adminpanel</h1>
-        <div className="flex items-center gap-4">
+       <header className="sticky top-0 z-50 w-full shadow-md py-8 px-8 flex justify-between items-center h-18"
+      style={{backgroundColor: "rgb(246, 233, 200, 0.8)"}}>
+        <h1 className="text-2xl font-bold  text-gray-800">Adminpanel</h1>
+        <div className="flex items-center gap-6">
           <NavLinks admin />
           <LogoutButton />
         </div>
@@ -50,8 +54,9 @@ export default function Header() {
 
   if (user.ispropertyowner) {
     return (
-      <header className="sticky top-0 z-50 bg-green-100 shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Hej {user.name} PROPOWNER</h1>
+      <header className="sticky top-0 z-50 w-full shadow-md py-8 px-8 flex justify-between items-center h-18"
+      style={{backgroundColor: "rgb(246, 233, 200, 0.8)"}}>
+        <h1 className="text-lg font-semibold  text-gray-800">Uthyrare</h1>
         <div className="flex items-center gap-4">
           <NavLinks owner />
           <LogoutButton />
