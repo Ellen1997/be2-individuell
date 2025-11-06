@@ -134,41 +134,42 @@ authApp.post("/logout", async (c) => {
 });
 
 
-authApp.patch("/authusers/:id", async (c) => {
-  const sb = c.get("supabase");
-  const user = c.get("user");
-  const userId = c.req.param("id");
+authApp.patch("/authusers/:id", requireAuth, async (c) => {
+  const user = c.get("user"); 
+  const userIdToUpdate = c.req.param("id");
 
   if (!user) {
     throw new HTTPException(401, { message: "Unauthorized" });
   }
 
-  const { data: activeProfile, error: activeError } = await sb
+  const sb = c.get("supabase");
+
+  const { data: profile, error: profileError } = await sb
     .from("profileusers")
     .select("isadmin")
     .eq("profileuser_id", user.id)
     .single();
 
-  if (activeError || !activeProfile) {
+  if (profileError || !profile) {
     throw new HTTPException(404, { message: "Your profile not found" });
   }
 
-  if (user.id !== userId || !activeProfile.isadmin) {
+  if (user.id !== userIdToUpdate && !profile.isadmin) {
     throw new HTTPException(403, {
-      message: "Forbidden: You can only update your own profile or be admin",
+      message: "Forbidden: Only admin can update other users",
     });
   }
 
   const body = await c.req.json();
 
-  if (!activeProfile.isadmin) {
+  if (!profile.isadmin) {
     delete body.isadmin;
   }
 
   const { data, error } = await sb
     .from("profileusers")
     .update(body)
-    .eq("profileuser_id", userId)
+    .eq("profileuser_id", userIdToUpdate)
     .select("*")
     .single();
 
@@ -178,6 +179,7 @@ authApp.patch("/authusers/:id", async (c) => {
 
   return c.json({ message: "User updated successfully", user: data }, 200);
 });
+
 
 authApp.delete("/authusers/:id", requireAuth, async (c) => {
   const user = c.get("user"); 
