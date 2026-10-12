@@ -1,33 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import DeleteProfileButton from "@/components/Buttons/DeleteaccountBtn";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loadingUser } = useUser();
 
-  useEffect(() => {
-    const fetchActiveUser = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
-        const res = await fetch(`${baseUrl}/api/auth/activeUser`, {
-          credentials: "include",
-        });
-        const data = await res.json();
-        setUser(data.user);
-      } catch (err) {
-        console.error("Kunde inte hämta användare:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchActiveUser();
-  }, []);
-
-  if (loading) return <p>Laddar...</p>;
+  if (loadingUser) return <p>Laddar...</p>;
   if (!user) return <p>Ingen användare inloggad.</p>;
+  if (!user.isadmin) return <p>Endast för administratörer.</p>;
 
   return (
     <>
