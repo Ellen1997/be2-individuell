@@ -5,20 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
 export default function NewBookingPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("propertyId") ?? "";
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, actions } = useUser();
-
-  if (!propertyId) {
-    return <p>Ingen property vald.</p>;
-  }
 
   useEffect(() => {
     if (user === null) {
@@ -31,6 +27,10 @@ export default function NewBookingPage() {
       return;
     }
   }, [user, actions, router]);
+
+  if (!propertyId) {
+    return <p>Ingen property vald.</p>;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
