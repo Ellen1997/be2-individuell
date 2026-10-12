@@ -42,16 +42,14 @@ const UserContext = createContext(defaultState);
 export function UserProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
   const fetchActiveUser = async () => {
     try {
       setLoadingUser(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/activeUser`,
-        {
-          credentials: "include",
-        },
-      );
+      const res = await fetch(`${baseUrl}/api/auth/activeUser`, {
+        credentials: "include",
+      });
       if (!res.ok) throw new Error("Not authenticated");
 
       const data = await res.json();
@@ -64,15 +62,12 @@ export function UserProvider({ children }: PropsWithChildren) {
   };
 
   const signin = async (email: string, password: string) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      },
-    );
+    const res = await fetch(`${baseUrl}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include",
+    });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Login failed");
@@ -82,13 +77,10 @@ export function UserProvider({ children }: PropsWithChildren) {
 
   const logout = async () => {
     try {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/logout`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      await fetch(`${baseUrl}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
     } catch {}
     setUser(null);
   };
