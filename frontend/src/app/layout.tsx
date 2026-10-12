@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+// @ts-expect-error CSS side-effect imports are handled by Next.js.
 import "./globals.css";
 import UserProviderClient from "@/components/providers/UserProviderClient";
 import Header from "@/components/Header";
@@ -29,17 +30,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <UserProviderClient>
-      
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <UserProviderClient>
           <Header />
-       <Hero/>
-          
-        {children}
+          <Hero />
+
+          {children}
         </UserProviderClient>
 
-          <Footer/>
-    
+        <Footer />
       </body>
     </html>
   );

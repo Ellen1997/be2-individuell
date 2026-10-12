@@ -6,7 +6,9 @@ interface DeleteProfileButtonProps {
   userId: string;
 }
 
-export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps) {
+export default function DeleteProfileButton({
+  userId,
+}: DeleteProfileButtonProps) {
   const { actions } = useUser();
   const router = useRouter();
 
@@ -14,7 +16,7 @@ export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps
     if (!confirm("Är du säker på att du vill ta bort ditt konto??")) return;
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
       const res = await fetch(`${baseUrl}/auth/authusers/${userId}`, {
         method: "DELETE",
         credentials: "include",
@@ -41,4 +43,3 @@ export default function DeleteProfileButton({ userId }: DeleteProfileButtonProps
     </button>
   );
 }
-

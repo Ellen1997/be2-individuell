@@ -15,37 +15,41 @@ export default function BookingOwnerOfPropPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      
       if (user === null) {
-            setError("Du måste vara inloggad för att se bokningar.");
-            setLoading(false);
-            return;
-        }
+        setError("Du måste vara inloggad för att se bokningar.");
+        setLoading(false);
+        return;
+      }
 
       if (!user.ispropertyowner) {
-      setError("Du måste vara property owner för att se eventuella property-bokningar.");
-      setLoading(false);
-      return;
-    }
+        setError(
+          "Du måste vara property owner för att se eventuella property-bokningar.",
+        );
+        setLoading(false);
+        return;
+      }
 
-        if (user === undefined) {
-            return;
-        }
+      if (user === undefined) {
+        return;
+      }
 
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-        const res = await fetch(`${baseUrl}/api/bookings/ownerofproperty/${user.id}`, {
-          credentials: "include",
-        });
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
+        const res = await fetch(
+          `${baseUrl}/api/bookings/ownerofproperty/${user.id}`,
+          {
+            credentials: "include",
+          },
+        );
 
         if (!res.ok) {
-                const text = await res.text();
+          const text = await res.text();
           throw new Error(text || "Misslyckades att hämta bokningar");
         }
 
         const data: PaginatedListResponse<Booking> = await res.json();
         console.log("Booking-response:", data);
-        
+
         setBookings(data.data || []);
       } catch (err: any) {
         setError(err.message || "Kunde inte hämta bokningar.");
@@ -73,18 +77,24 @@ export default function BookingOwnerOfPropPage() {
   return (
     <div className="p-16">
       <p className="text-2xl font-bold text-neutral-900">Bokningar</p>
-      <p className="text-xl font-bold text-gray-600">på mina uthyrningsobjekt:</p>
+      <p className="text-xl font-bold text-gray-600">
+        på mina uthyrningsobjekt:
+      </p>
       <div className="mt-6"></div>
 
-         {bookings.length === 0 ? (
+      {bookings.length === 0 ? (
         <p className="text-gray-600">Det finns inga bokningar ännu.</p>
       ) : (
-        user && <BookingList bookings={bookings} currentUser={{
-       id: user.id,
-       ispropertyowner: user.ispropertyowner,
-       isadmin: user.isadmin
-
-        }} />
+        user && (
+          <BookingList
+            bookings={bookings}
+            currentUser={{
+              id: user.id,
+              ispropertyowner: user.ispropertyowner,
+              isadmin: user.isadmin,
+            }}
+          />
+        )
       )}
     </div>
   );

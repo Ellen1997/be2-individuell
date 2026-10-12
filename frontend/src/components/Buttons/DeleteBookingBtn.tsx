@@ -4,10 +4,13 @@ import { useState } from "react";
 
 interface DeleteBookingButtonProps {
   bookingId: string;
-  onDeleted?: () => void; 
+  onDeleted?: () => void;
 }
 
-export default function DeleteBookingButton({ bookingId, onDeleted }: DeleteBookingButtonProps) {
+export default function DeleteBookingButton({
+  bookingId,
+  onDeleted,
+}: DeleteBookingButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +21,7 @@ export default function DeleteBookingButton({ bookingId, onDeleted }: DeleteBook
     setError(null);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
       const res = await fetch(`${baseUrl}/api/bookings/${bookingId}`, {
         method: "DELETE",
         credentials: "include",

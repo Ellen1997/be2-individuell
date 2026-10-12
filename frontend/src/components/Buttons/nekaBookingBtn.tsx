@@ -7,7 +7,10 @@ interface DeclineBookingButtonProps {
   onStatusChange?: (status: string) => void;
 }
 
-export default function DeclineBookingButton({ bookingId, onStatusChange }: DeclineBookingButtonProps) {
+export default function DeclineBookingButton({
+  bookingId,
+  onStatusChange,
+}: DeclineBookingButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +18,7 @@ export default function DeclineBookingButton({ bookingId, onStatusChange }: Decl
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
       const res = await fetch(`${baseUrl}/api/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

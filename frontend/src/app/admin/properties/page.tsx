@@ -6,7 +6,7 @@ import { Property } from "../../../../../types/property";
 
 export default function PropertyAdminPage() {
   const { user } = useUser();
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,19 +16,18 @@ export default function PropertyAdminPage() {
 
   useEffect(() => {
     if (!user) {
-       setError("Du måste vara inloggad som admin för att se denna sida.");
+      setError("Du måste vara inloggad som admin för att se denna sida.");
       setLoading(false);
       return;
-    } 
+    }
 
-        if (!user.isadmin) {
+    if (!user.isadmin) {
       setError("Du måste vara admin för att se denna sida.");
       setLoading(false);
       return;
     }
-      
-      
-      fetchAllProperties();
+
+    fetchAllProperties();
   }, [user]);
 
   const fetchAllProperties = async () => {
@@ -36,15 +35,16 @@ export default function PropertyAdminPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(
-        `${baseUrl}/api/properties`,
-        { credentials: "include" }
-      );
+      const response = await fetch(`${baseUrl}/api/properties`, {
+        credentials: "include",
+      });
 
       if (!response.ok) throw new Error("Kunde inte hämta alla properties");
 
       const data = await response.json();
-      setProperties(Array.isArray(data) ? data : data.data || data.properties || []);
+      setProperties(
+        Array.isArray(data) ? data : data.data || data.properties || [],
+      );
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -70,10 +70,9 @@ export default function PropertyAdminPage() {
 
   const saveEdit = async (id: string) => {
     try {
-
-        const payload = Object.fromEntries(
-        Object.entries(editForm).filter(([_, v]) => v !== undefined)
-         );
+      const payload = Object.fromEntries(
+        Object.entries(editForm).filter(([_, v]) => v !== undefined),
+      );
 
       const response = await fetch(`${baseUrl}/api/properties/${id}`, {
         method: "PATCH",
@@ -112,117 +111,121 @@ export default function PropertyAdminPage() {
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
-
-  <div className="p-8">
-  <h1 className="text-2xl font-bold mb-5">Alla Properties</h1>
-  {properties.length === 0 ? (
-    <p>Det finns inga properties ännu.</p>
-  ) : (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      {properties.map((p) => (
-        <div
-          key={p.property_id}
-          className="border rounded-2xl p-6 shadow-md bg-white transition-shadow text-zinc-800 text-2xl"
-        >
-          {editingId === p.property_id ? (
-            <div className="space-y-2">
-              <input
-                type="text"
-                value={editForm.property_name || ""}
-                onChange={(e) =>
-                  setEditForm((f) => ({ ...f, property_name: e.target.value }))
-                }
-                className="border rounded-2xl px-2 py-1 w-full"
-                placeholder="Namn"
-              />
-              <input
-                type="text"
-                value={editForm.description || ""}
-                onChange={(e) =>
-                  setEditForm((f) => ({ ...f, description: e.target.value }))
-                }
-                className="border px-2 py-1 w-full"
-                placeholder="Beskrivning"
-              />
-              <input
-                type="text"
-                value={editForm.location || ""}
-                onChange={(e) =>
-                  setEditForm((f) => ({ ...f, location: e.target.value }))
-                }
-                className="border px-2 py-1 w-full"
-                placeholder="Plats"
-              />
-              <input
-                type="number"
-                value={editForm.pricePerNight || 0}
-                onChange={(e) =>
-                  setEditForm((f) => ({
-                    ...f,
-                    pricePerNight: Number(e.target.value),
-                  }))
-                }
-                className="border px-2 py-1 w-full"
-                placeholder="Pris per natt"
-              />
-              <input
-                type="text"
-                value={editForm.image_url || ""}
-                onChange={(e) =>
-                  setEditForm((f) => ({ ...f, image_url: e.target.value }))
-                }
-                className="border px-2 py-1 w-full"
-                placeholder="Bild URL"
-              />
-              <div className="flex gap-2 mt-2">
-                <button
-                  onClick={() => saveEdit(p.property_id)}
-                  className="bg-green-600 text-white px-4 py-1 rounded"
-                >
-                  Spara
-                </button>
-                <button
-                  onClick={cancelEditing}
-                  className="bg-gray-300 px-4 py-1 rounded"
-                >
-                  Avbryt
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2 text-sm">
-              <p className="font-bold text-2xl">{p.property_name}</p>
-              <p>{p.location}</p>
-              <p>{p.description}</p>
-              <p>{p.pricePerNight} kr/natt</p>
-              {p.image_url && (
-                <img
-                  src={p.image_url}
-                  alt={p.property_name}
-                  className="w-full h-50 object-cover rounded"
-                />
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-5">Alla Properties</h1>
+      {properties.length === 0 ? (
+        <p>Det finns inga properties ännu.</p>
+      ) : (
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {properties.map((p) => (
+            <div
+              key={p.property_id}
+              className="border rounded-2xl p-6 shadow-md bg-white transition-shadow text-zinc-800 text-2xl"
+            >
+              {editingId === p.property_id ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={editForm.property_name || ""}
+                    onChange={(e) =>
+                      setEditForm((f) => ({
+                        ...f,
+                        property_name: e.target.value,
+                      }))
+                    }
+                    className="border rounded-2xl px-2 py-1 w-full"
+                    placeholder="Namn"
+                  />
+                  <input
+                    type="text"
+                    value={editForm.description || ""}
+                    onChange={(e) =>
+                      setEditForm((f) => ({
+                        ...f,
+                        description: e.target.value,
+                      }))
+                    }
+                    className="border px-2 py-1 w-full"
+                    placeholder="Beskrivning"
+                  />
+                  <input
+                    type="text"
+                    value={editForm.location || ""}
+                    onChange={(e) =>
+                      setEditForm((f) => ({ ...f, location: e.target.value }))
+                    }
+                    className="border px-2 py-1 w-full"
+                    placeholder="Plats"
+                  />
+                  <input
+                    type="number"
+                    value={editForm.pricePerNight || 0}
+                    onChange={(e) =>
+                      setEditForm((f) => ({
+                        ...f,
+                        pricePerNight: Number(e.target.value),
+                      }))
+                    }
+                    className="border px-2 py-1 w-full"
+                    placeholder="Pris per natt"
+                  />
+                  <input
+                    type="text"
+                    value={editForm.image_url || ""}
+                    onChange={(e) =>
+                      setEditForm((f) => ({ ...f, image_url: e.target.value }))
+                    }
+                    className="border px-2 py-1 w-full"
+                    placeholder="Bild URL"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => saveEdit(p.property_id)}
+                      className="bg-green-600 text-white px-4 py-1 rounded"
+                    >
+                      Spara
+                    </button>
+                    <button
+                      onClick={cancelEditing}
+                      className="bg-gray-300 px-4 py-1 rounded"
+                    >
+                      Avbryt
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2 text-sm">
+                  <p className="font-bold text-2xl">{p.property_name}</p>
+                  <p>{p.location}</p>
+                  <p>{p.description}</p>
+                  <p>{p.pricePerNight} kr/natt</p>
+                  {p.image_url && (
+                    <img
+                      src={p.image_url}
+                      alt={p.property_name}
+                      className="w-full h-50 object-cover rounded"
+                    />
+                  )}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => startEditing(p)}
+                      className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition-colors"
+                    >
+                      Redigera
+                    </button>
+                    <button
+                      onClick={() => deleteProperty(p.property_id)}
+                      className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition-colors"
+                    >
+                      Ta bort
+                    </button>
+                  </div>
+                </div>
               )}
-              <div className="flex gap-2 mt-2">
-                <button
-                  onClick={() => startEditing(p)}
-                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition-colors"
-                >
-                  Redigera
-                </button>
-                <button
-                  onClick={() => deleteProperty(p.property_id)}
-                  className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition-colors"
-                >
-                  Ta bort
-                </button>
-              </div>
             </div>
-          )}
+          ))}
         </div>
-      ))}
+      )}
     </div>
-  )}
-</div>
-
   );
 }

@@ -15,7 +15,7 @@ export default function PropertyPage({ params }: Params) {
   const resolvedParams = React.use(params);
   const { id } = resolvedParams;
 
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
   const { user, actions } = useUser();
 
   const [property, setProperty] = useState<Property | null>(null);
@@ -24,9 +24,7 @@ export default function PropertyPage({ params }: Params) {
 
   useEffect(() => {
     const fetchProperty = async () => {
-
       try {
-       
         const response = await fetch(`${baseUrl}/api/properties/${id}/`, {
           credentials: "include",
         });
@@ -53,7 +51,9 @@ export default function PropertyPage({ params }: Params) {
   if (error)
     return (
       <div className="p-16">
-        <h1 className="text-2xl font-bold text-gray-600">Uthyrningsobjekt detaljsida</h1>
+        <h1 className="text-2xl font-bold text-gray-600">
+          Uthyrningsobjekt detaljsida
+        </h1>
         <p className="text-red-600 mt-4">{error}</p>
       </div>
     );
@@ -62,7 +62,9 @@ export default function PropertyPage({ params }: Params) {
 
   return (
     <div className="p-16">
-      <h1 className="text-2xl font-bold mb-4 text-gray-600">Uthyrningsobjekt detaljsida</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-600">
+        Uthyrningsobjekt detaljsida
+      </h1>
       <SingleProperty property={property} />
     </div>
   );

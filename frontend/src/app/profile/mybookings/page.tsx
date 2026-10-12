@@ -14,7 +14,6 @@ export default function BookingPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      
       if (user === null) {
         setError("Du måste vara inloggad för att se bokningar.");
         setLoading(false);
@@ -24,7 +23,7 @@ export default function BookingPage() {
       if (user === undefined) return;
 
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
         const res = await fetch(`${baseUrl}/api/bookings/user/${user.id}`, {
           credentials: "include",
         });
@@ -35,7 +34,6 @@ export default function BookingPage() {
         }
 
         const data: Booking[] = await res.json();
-
 
         setBookings(Array.isArray(data) ? data : []);
       } catch (err: any) {
@@ -58,15 +56,15 @@ export default function BookingPage() {
       </div>
     );
 
-    console.log("Current bookings:", bookings);
+  console.log("Current bookings:", bookings);
 
-    if(bookings.length === 0)
-        return(
-         <div className="p-16">
+  if (bookings.length === 0)
+    return (
+      <div className="p-16">
         <h1 className="text-2xl font-bold">Mina bokningar</h1>
         <p className="text-gray-600">Du har inga bokningar ännu...</p>
       </div>
-        );
+    );
   return (
     <div className="p-16">
       <h1 className="text-2xl font-bold mb-4">Mina bokningar</h1>
@@ -77,7 +75,7 @@ export default function BookingPage() {
           currentUser={{
             id: user.id,
             ispropertyowner: user.ispropertyowner,
-            isadmin: user.isadmin
+            isadmin: user.isadmin,
           }}
         />
       )}

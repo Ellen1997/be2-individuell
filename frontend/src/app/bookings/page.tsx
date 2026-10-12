@@ -17,54 +17,52 @@ export default function BookingPage() {
   const [offset, setOffset] = useState(0);
   const [count, setCount] = useState(0);
 
+  const fetchData = async () => {
+    if (user === null) {
+      setError("Du måste vara inloggad för att se bokningar.");
+      setLoading(false);
+      return;
+    }
 
-    const fetchData = async () => {
-      
-      if (user === null) {
-            setError("Du måste vara inloggad för att se bokningar.");
-            setLoading(false);
-            return;
-        }
+    if (user === undefined) {
+      return;
+    }
 
-        if (user === undefined) {
-            return;
-        }
+    try {
+      setLoading(true);
 
-      try {
-        setLoading(true);
+      const params = new URLSearchParams();
 
-        const params = new URLSearchParams();
+      params.append("limit", String(limit));
+      params.append("offset", String(offset));
 
-        params.append("limit", String(limit));
-        params.append("offset", String(offset));
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+      const res = await fetch(`${baseUrl}/api/bookings?${params.toString()}`, {
+        credentials: "include",
+      });
 
-        const res = await fetch(`${baseUrl}/api/bookings?${params.toString()}`, {
-          credentials: "include",
-        });
-
-        if (!res.ok) {
-                const text = await res.text();
-          throw new Error(text || "Misslyckades att hämta bokningar");
-        }
-
-        const data: PaginatedListResponse<Booking> = await res.json();
-        setBookings(data.data);
-        setCount(data.count);
-      } catch (err: any) {
-        setError(err.message || "Kunde inte hämta bokningar.");
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Misslyckades att hämta bokningar");
       }
-    };
 
-      useEffect(() => {
-        if (user === null) {
-            setError("Du måste vara inloggad admin för att se bokningar.");
-            setLoading(false);
-            return;
-        }
+      const data: PaginatedListResponse<Booking> = await res.json();
+      setBookings(data.data);
+      setCount(data.count);
+    } catch (err: any) {
+      setError(err.message || "Kunde inte hämta bokningar.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user === null) {
+      setError("Du måste vara inloggad admin för att se bokningar.");
+      setLoading(false);
+      return;
+    }
     if (user) fetchData();
   }, [user, offset, limit]);
 
@@ -81,43 +79,48 @@ export default function BookingPage() {
   return (
     <div className="p-16">
       <h1 className="text-2xl font-bold">Alla bokningar</h1>
-  
-      {user && <BookingList bookings={bookings} currentUser={{
-       id: user.id,
-       ispropertyowner: user.ispropertyowner,
-       isadmin: user.isadmin
-}} />}
 
-<div className="flex justify-between items-center mt-8">
-  <button
-    onClick={() => {
-      if (offset - limit >= 0) {
-        setOffset(offset - limit);
-      }
-    }}
-    disabled={offset === 0}
-    className={`px-4 py-2 rounded ${offset === 0 ? "bg-gray-300" : "bg-blue-600 text-white hover:bg-blue-700"}`}
-  >
-    Föregående
-  </button>
+      {user && (
+        <BookingList
+          bookings={bookings}
+          currentUser={{
+            id: user.id,
+            ispropertyowner: user.ispropertyowner,
+            isadmin: user.isadmin,
+          }}
+        />
+      )}
 
-  <p>
-    Sida {Math.floor(offset / limit) + 1} av {Math.ceil(count / limit) || 1}
-  </p>
+      <div className="flex justify-between items-center mt-8">
+        <button
+          onClick={() => {
+            if (offset - limit >= 0) {
+              setOffset(offset - limit);
+            }
+          }}
+          disabled={offset === 0}
+          className={`px-4 py-2 rounded ${offset === 0 ? "bg-gray-300" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+        >
+          Föregående
+        </button>
 
-  <button
-    onClick={() => {
-      if (offset + limit < count) {
-        setOffset(offset + limit);
-      }
-    }}
-    disabled={offset + limit >= count}
-    className={`px-4 py-2 rounded ${offset + limit >= count ? "bg-gray-300" : "bg-blue-600 text-white hover:bg-blue-700"}`}
-  >
-    Nästa
-  </button>
-</div>
+        <p>
+          Sida {Math.floor(offset / limit) + 1} av{" "}
+          {Math.ceil(count / limit) || 1}
+        </p>
 
+        <button
+          onClick={() => {
+            if (offset + limit < count) {
+              setOffset(offset + limit);
+            }
+          }}
+          disabled={offset + limit >= count}
+          className={`px-4 py-2 rounded ${offset + limit >= count ? "bg-gray-300" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+        >
+          Nästa
+        </button>
+      </div>
     </div>
   );
 }

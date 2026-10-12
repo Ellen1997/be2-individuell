@@ -11,7 +11,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchActiveUser = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
         const res = await fetch(`${baseUrl}/auth/activeUser`, {
           credentials: "include",
         });
@@ -31,26 +31,27 @@ export default function ProfilePage() {
 
   return (
     <>
-    <div className="mt-8"></div>
+      <div className="mt-8"></div>
 
-    <div className="max-w-lg mx-auto p-4 bg-amber-50 rounded-2xl shadow-md">
-      <h1 className="text-2xl font-semibold mb-4">Min profil</h1>
-      <p><strong>Namn:</strong> {user.name}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Telefon:</strong> {user.phone_number}</p>
+      <div className="max-w-lg mx-auto p-4 bg-amber-50 rounded-2xl shadow-md">
+        <h1 className="text-2xl font-semibold mb-4">Min profil</h1>
+        <p>
+          <strong>Namn:</strong> {user.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
+        <p>
+          <strong>Telefon:</strong> {user.phone_number}
+        </p>
 
-      <Link
-      href={"/profile/mybookings"}
-      className=" font-bold text-blue-800"
-      >Mina bokningar</Link>
-      <div className="mt-1"></div>
+        <Link href={"/profile/mybookings"} className=" font-bold text-blue-800">
+          Mina bokningar
+        </Link>
+        <div className="mt-1"></div>
 
-      <DeleteProfileButton userId={user.id} />
-    </div>
+        <DeleteProfileButton userId={user.id} />
+      </div>
     </>
   );
 }
-
-
-
-

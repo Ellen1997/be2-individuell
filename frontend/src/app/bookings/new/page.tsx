@@ -1,6 +1,6 @@
 "use client";
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
@@ -8,13 +8,13 @@ export default function NewBookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("propertyId") ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, actions } = useUser();
-
 
   if (!propertyId) {
     return <p>Ingen property vald.</p>;
@@ -26,9 +26,10 @@ export default function NewBookingPage() {
       setLoading(false);
       router.push("/login");
       return;
-    } if (user === undefined) {
+    }
+    if (user === undefined) {
       return;
-    } 
+    }
   }, [user, actions, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,10 +38,10 @@ export default function NewBookingPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3003/api/bookings", {
+      const res = await fetch(`${baseUrl}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", 
+        credentials: "include",
         body: JSON.stringify({
           property_id: propertyId,
           start_date: startDate,
@@ -54,7 +55,6 @@ export default function NewBookingPage() {
         throw new Error(data.error || "Misslyckades med bokningen");
       }
 
-
       router.push("/profile/mybookings");
     } catch (err: any) {
       setError(err.message);
@@ -65,40 +65,40 @@ export default function NewBookingPage() {
 
   return (
     <>
-<div className="mt-8"></div>
-    <div className="p-8 max-w-md mx-auto bg-amber-50 shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Boka denna bostad</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label>
-          Startdatum:
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            required
-            className="border rounded px-2 py-1 w-full"
-          />
-        </label>
-        <label>
-          Slutdatum:
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            required
-            className="border rounded px-2 py-1 w-full"
-          />
-        </label>
-        {error && <p className="text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          {loading ? "Bokar..." : "Boka"}
-        </button>
-      </form>
-    </div>
+      <div className="mt-8"></div>
+      <div className="p-8 max-w-md mx-auto bg-amber-50 shadow-md rounded-lg">
+        <h2 className="text-xl font-semibold mb-4">Boka denna bostad</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label>
+            Startdatum:
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+              className="border rounded px-2 py-1 w-full"
+            />
+          </label>
+          <label>
+            Slutdatum:
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              required
+              className="border rounded px-2 py-1 w-full"
+            />
+          </label>
+          {error && <p className="text-red-600">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            {loading ? "Bokar..." : "Boka"}
+          </button>
+        </form>
+      </div>
     </>
   );
 }

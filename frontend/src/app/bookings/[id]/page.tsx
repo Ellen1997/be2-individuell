@@ -16,7 +16,7 @@ export default function BookingPage({ params }: Props) {
   const resolvedParams = React.use(params);
   const { id } = resolvedParams;
 
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
   const { user, actions } = useUser();
   const router = useRouter();
 
@@ -26,19 +26,17 @@ export default function BookingPage({ params }: Props) {
 
   useEffect(() => {
     const fetchBooking = async () => {
-        if (user === null) {
-            setError("Du måste vara inloggad för att se bokningar.");
-            setLoading(false);
-            return;
-        }
+      if (user === null) {
+        setError("Du måste vara inloggad för att se bokningar.");
+        setLoading(false);
+        return;
+      }
 
-        if (user === undefined) {
-            return;
-        }
-
+      if (user === undefined) {
+        return;
+      }
 
       try {
-
         const response = await fetch(`${baseUrl}/api/bookings/${id}`, {
           credentials: "include",
         });
@@ -77,12 +75,12 @@ export default function BookingPage({ params }: Props) {
       <SingleBooking booking={booking} />
       <div className="mt-4"></div>
 
-         <button
-      onClick={() => router.back()}
-      className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
-    >
-      Tillbaka
-    </button>
+      <button
+        onClick={() => router.back()}
+        className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
+      >
+        Tillbaka
+      </button>
     </div>
   );
 }

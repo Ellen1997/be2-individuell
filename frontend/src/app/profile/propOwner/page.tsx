@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function PropertyOwnerPage() {
   const { user } = useUser();
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,12 +18,14 @@ export default function PropertyOwnerPage() {
 
   useEffect(() => {
     if (user === null) {
-      setError("Du måste vara inloggad som property owner för att se denna sida.");
+      setError(
+        "Du måste vara inloggad som property owner för att se denna sida.",
+      );
       setLoading(false);
       return;
     }
 
-     if (!user.ispropertyowner) {
+    if (!user.ispropertyowner) {
       setError("Du måste vara property owner för att skapa properties.");
       setLoading(false);
       router.push("/properties");
@@ -42,7 +44,7 @@ export default function PropertyOwnerPage() {
 
       const response = await fetch(
         `${baseUrl}/api/properties/owner/${user.id}`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       if (!response.ok) throw new Error("Kunde inte hämta dina properties");
@@ -74,10 +76,9 @@ export default function PropertyOwnerPage() {
 
   const saveEdit = async (id: string) => {
     try {
-
-        const payload = Object.fromEntries(
-        Object.entries(editForm).filter(([_, v]) => v !== undefined)
-         );
+      const payload = Object.fromEntries(
+        Object.entries(editForm).filter(([_, v]) => v !== undefined),
+      );
 
       const response = await fetch(`${baseUrl}/api/properties/${id}`, {
         method: "PATCH",
@@ -117,7 +118,9 @@ export default function PropertyOwnerPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4 text-gray-600">Mina Uthyrningsobjekt</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-600">
+        Mina Uthyrningsobjekt
+      </h1>
       {properties.length === 0 ? (
         <p>Du har inga properties ännu.</p>
       ) : (
@@ -130,7 +133,10 @@ export default function PropertyOwnerPage() {
                     type="text"
                     value={editForm.property_name || ""}
                     onChange={(e) =>
-                      setEditForm((f) => ({ ...f, property_name: e.target.value }))
+                      setEditForm((f) => ({
+                        ...f,
+                        property_name: e.target.value,
+                      }))
                     }
                     className="border px-2 py-1 w-full"
                     placeholder="Namn"
@@ -139,7 +145,10 @@ export default function PropertyOwnerPage() {
                     type="text"
                     value={editForm.description || ""}
                     onChange={(e) =>
-                      setEditForm((f) => ({ ...f, description: e.target.value }))
+                      setEditForm((f) => ({
+                        ...f,
+                        description: e.target.value,
+                      }))
                     }
                     className="border px-2 py-1 w-full"
                     placeholder="Beskrivning"
@@ -191,11 +200,13 @@ export default function PropertyOwnerPage() {
                 </div>
               ) : (
                 <div className="space-y-1 bg-amber-100">
-                  <p className="font-semibold text-2xl text-gray-500">{p.property_name}</p>
-                  <p className="font-extrabold  text-gray-500">Plats</p> 
+                  <p className="font-semibold text-2xl text-gray-500">
+                    {p.property_name}
+                  </p>
+                  <p className="font-extrabold  text-gray-500">Plats</p>
                   <p>{p.location}</p>
                   <p className="font-extrabold  text-gray-500">Beskrivning</p>
-                    <p>{p.description}</p>
+                  <p>{p.description}</p>
                   <p className="font-bold"> Pris: {p.pricePerNight} kr/natt</p>
                   {p.image_url && (
                     <img

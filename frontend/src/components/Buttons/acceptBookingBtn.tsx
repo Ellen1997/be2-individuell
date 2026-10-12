@@ -7,7 +7,10 @@ interface AcceptBookingButtonProps {
   onStatusChange?: (status: string) => void;
 }
 
-export default function AcceptBookingButton({ bookingId, onStatusChange }: AcceptBookingButtonProps) {
+export default function AcceptBookingButton({
+  bookingId,
+  onStatusChange,
+}: AcceptBookingButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +18,7 @@ export default function AcceptBookingButton({ bookingId, onStatusChange }: Accep
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
       const res = await fetch(`${baseUrl}/api/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

@@ -15,7 +15,7 @@ export default function ProfileUserPage({ params }: Params) {
   const resolvedParams = React.use(params);
   const { id } = resolvedParams;
 
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
   const { user, actions } = useUser();
 
   const [userDetail, setUserDetail] = useState<User | null>(null);
@@ -24,19 +24,18 @@ export default function ProfileUserPage({ params }: Params) {
 
   useEffect(() => {
     const fetchUser = async () => {
-          if (user === null) {
-            setError("Du måste vara inloggad admin för att se users.");
-            setLoading(false);
-            return;
-        }
+      if (user === null) {
+        setError("Du måste vara inloggad admin för att se users.");
+        setLoading(false);
+        return;
+      }
 
-        if (user === undefined) {
-            return;
-        }
+      if (user === undefined) {
+        return;
+      }
       try {
-
         const response = await fetch(`${baseUrl}/api/users/${id}`, {
-          credentials: "include", 
+          credentials: "include",
         });
 
         if (!response.ok) {
