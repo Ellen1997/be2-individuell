@@ -8,7 +8,6 @@ export default function NewPropertyPage() {
   const router = useRouter();
   const { user, actions } = useUser();
 
-
   const [form, setForm] = useState({
     property_name: "",
     description: "",
@@ -19,17 +18,18 @@ export default function NewPropertyPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (user === null) {
       setError("GIT HÄRIFRÅN");
       setLoading(false);
       router.push("/login");
       return;
-    } if (user === undefined) {
+    }
+    if (user === undefined) {
       return;
-    } 
+    }
     if (!user.ispropertyowner) {
       setError("Du måste vara property owner för att skapa properties.");
       setLoading(false);
@@ -38,8 +38,9 @@ export default function NewPropertyPage() {
     }
   }, [user, actions, router]);
 
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -53,8 +54,7 @@ export default function NewPropertyPage() {
     setLoading(true);
 
     try {
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/properties/`, {
+      const res = await fetch(`${baseUrl}/api/properties/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -85,7 +85,9 @@ export default function NewPropertyPage() {
         onSubmit={handleSubmit}
         className="bg-amber-100 shadow-md rounded-xl p-6 w-full max-w-md"
       >
-        <h1 className="text-xl font-semibold mb-4 text-center">Skapa ny Property</h1>
+        <h1 className="text-xl font-semibold mb-4 text-center">
+          Skapa ny Property
+        </h1>
 
         {error && (
           <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
@@ -121,7 +123,9 @@ export default function NewPropertyPage() {
           className="w-full border rounded-md p-2 mb-3"
         />
 
-        <label className="block mb-2 text-sm font-medium">Pris per natt (SEK)</label>
+        <label className="block mb-2 text-sm font-medium">
+          Pris per natt (SEK)
+        </label>
         <input
           type="number"
           name="pricePerNight"
