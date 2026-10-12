@@ -27,7 +27,7 @@ app.use('*', cors({
 }), withSupabase);
 
 
-app.get('/health', (c) => {
+app.get('/api/health', (c) => {
   const now = Date.now();
   const uptime = Math.floor((now - serverStartTime) / 1000)
 
@@ -45,20 +45,23 @@ app.get('/health', (c) => {
 app.get('/', (c) => {
     return c.text('Individuella BnB-projket frontend')
 })
-app.route('/auth', authApp )
+app.route('/api/auth', authApp )
 
-app.use('/api/users', requireAuth)
-app.use('/api/bookings', requireAuth)
-app.use('/admin/*', requireAdmin)
+app.use('/api/users/*', requireAuth)
+app.use('/api/bookings/*', requireAuth)
 
 app.route('/api/users', usersApp )
 app.route('/api/properties', propertiesApp)
 app.route('/api/bookings', bookingsApp)
 
 
-serve({
-  fetch: app.fetch,
-  port: 3003
-}, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
-});
+export default app;
+
+if (!process.env.VERCEL) {
+  serve({
+    fetch: app.fetch,
+    port: 3003
+  }, (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`)
+  });
+}
