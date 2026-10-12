@@ -17,7 +17,7 @@ export default function DeleteProfileButton({
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "";
-      const res = await fetch(`${baseUrl}/auth/authusers/${userId}`, {
+      const res = await fetch(`${baseUrl}/api/auth/authusers/${userId}`, {
         method: "DELETE",
         credentials: "include",
       });

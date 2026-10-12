@@ -72,7 +72,7 @@ export default function ProfileUsersPage() {
         Object.entries(editForm).filter(([_, v]) => v !== undefined),
       );
 
-      const response = await fetch(`${baseUrl}/auth/authusers/${id}`, {
+      const response = await fetch(`${baseUrl}/api/auth/authusers/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -92,7 +92,7 @@ export default function ProfileUsersPage() {
     if (!confirm("Är du säker på att du vill ta bort denna användare?")) return;
 
     try {
-      const response = await fetch(`${baseUrl}/auth/authusers/${id}`, {
+      const response = await fetch(`${baseUrl}/api/auth/authusers/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

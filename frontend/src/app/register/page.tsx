@@ -29,11 +29,14 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        },
+      );
 
       const data = await res.json();
       if (!res.ok) {
@@ -55,7 +58,9 @@ export default function RegisterPage() {
         onSubmit={handleRegister}
         className="bg-amber-100 shadow-md rounded-xl p-6 w-full max-w-sm"
       >
-        <h1 className="text-xl font-semibold mb-4 text-center">Registrera dig</h1>
+        <h1 className="text-xl font-semibold mb-4 text-center">
+          Registrera dig
+        </h1>
 
         {error && (
           <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
